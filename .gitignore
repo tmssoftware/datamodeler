@@ -80,6 +80,6 @@ __recovery/
 
 # Project=specific ignored files
 __smartsetup/
-doc/source/_output
+doc/_output
 source/dm.res
 source/dmversion.res
