@@ -1,0 +1,80 @@
+TMS DATA MODELER SOURCE-AVAILABLE LICENSE
+
+Copyright (c) TMS Software. All rights reserved.
+
+TMS Data Modeler (“Software”) is commercial software distributed under this license. Although the source code is publicly available, the Software is not open source.
+
+By using, copying, modifying, building, or distributing the Software or its source code, you agree to the terms of this license.
+
+1. LICENSE REQUIREMENT
+
+You may:
+
+* access and view the source code;
+* modify the source code for your own internal use;
+* compile private builds of the Software;
+* install and use the Software on multiple devices, provided it is used only by the same developer;
+* create public GitHub forks using GitHub’s standard functionality;
+* submit pull requests and contributions to the project.
+
+No paid license is required for:
+
+* personal learning;
+* educational use;
+* evaluation;
+* or open-source projects.
+
+A paid license is required for:
+
+* use within a company or organization;
+* client or consulting work;
+* professional software development activities;
+* or other business-related use.
+
+A separate commercial license is required for each developer using the Software professionally.
+
+2. RESTRICTIONS
+
+You may not:
+
+* redistribute the Software, whether modified or unmodified;
+* redistribute compiled binaries built from the source code;
+* distribute modified versions of the Software to third parties;
+* sublicense or resell the Software;
+* offer the Software as a hosted, managed, or SaaS service;
+* use the Software or its source code to create, market, or distribute a competing commercial product substantially similar to the Software;
+* remove or alter copyright or license notices.
+
+Public GitHub forks are permitted, but remain subject to this license.
+
+3. THIRD-PARTY COMPONENTS
+
+The Software depends on third-party libraries and components that may require separate licenses.
+
+Such third-party components are not covered by this license, and you are responsible for complying with their respective license terms.
+
+4. UPDATES
+
+Commercial licenses include all updates released for the same major version of the Software.
+
+TMS Software may define different licensing or update terms for future major versions.
+
+5. CONTRIBUTIONS
+
+By submitting code, pull requests, patches, or other contributions to the project, you grant TMS Software a perpetual, worldwide, royalty-free, irrevocable license to use, modify, distribute, sublicense, and relicense your contributions as part of the Software or related products.
+
+You represent that you have the right to submit such contributions.
+
+6. TERMINATION
+
+This license automatically terminates if you violate its terms.
+
+Upon termination, you must stop using the Software.
+
+7. DISCLAIMER OF WARRANTY
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+8. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL TMS SOFTWARE BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM OR IN CONNECTION WITH THE SOFTWARE OR THE USE OF THE SOFTWARE.

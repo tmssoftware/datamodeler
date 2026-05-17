@@ -1,0 +1,186 @@
+object TDataTypeConversionMap
+  ConversionName = 'Oracle 10g to Firebird 2'
+  OriginalDBTypeID = 'oracle10g'
+  TargetDBTypeID = 'firebird2'
+  ConversionItems = <
+    item
+      OriginalDataType = 'Bfile'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary_Double'
+      TargetDataType = 'Double precision'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary_Float'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Blob'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Char'
+      TargetDataType = 'Char'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Clob'
+      TargetDataType = 'Blob text'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Date'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Interval day to second'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Interval year to month'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Long'
+      TargetDataType = 'Bigint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Long raw'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar'
+      TargetDataType = 'NChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NClob'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Number'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Number (floating point)'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NVarchar2'
+      TargetDataType = 'NChar Varying'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Raw'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Rowid'
+      TargetDataType = 'Varchar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp'
+      TargetDataType = 'Timestamp'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp with local time zone'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp with time zone'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Urowid'
+      TargetDataType = 'Varchar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Varchar2'
+      TargetDataType = 'Varchar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Float'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Double precision'
+      TargetDataType = 'Double precision'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Integer'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Smallint'
+      TargetDataType = 'Smallint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Real'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end>
+end

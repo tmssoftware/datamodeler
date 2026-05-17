@@ -1,0 +1,203 @@
+object TDataTypeConversionMap
+  ConversionName = 'MS SQL Server 2000 to Oracle 10g'
+  OriginalDBTypeID = 'mssql2000'
+  TargetDBTypeID = 'oracle10g'
+  ConversionItems = <
+    item
+      OriginalDataType = 'Bigint'
+      TargetDataType = 'Long'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Bigint (identity)'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Bit'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Char'
+      TargetDataType = 'Char'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Computed'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Datetime'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal (identity)'
+      TargetDataType = 'Binary_Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Float'
+      TargetDataType = 'Binary_Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Image'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Int'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Int (identity)'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Money'
+      TargetDataType = 'Binary_Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar'
+      TargetDataType = 'NChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NText'
+      TargetDataType = 'Clob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric'
+      TargetDataType = 'Number'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric (identity)'
+      TargetDataType = 'Binary_Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NVarChar'
+      TargetDataType = 'NVarchar2'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Real'
+      TargetDataType = 'Real'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallDateTime'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallInt'
+      TargetDataType = 'Smallint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallInt (identity)'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallMoney'
+      TargetDataType = 'Binary_Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Sql_Variant'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SysName'
+      TargetDataType = 'Varchar2'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Text'
+      TargetDataType = 'Clob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TimeStamp'
+      TargetDataType = 'Timestamp'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TinyInt'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TinyInt (identity)'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'UniqueIdentifier'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarBinary'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarChar'
+      TargetDataType = 'Varchar2'
+      Size = 0
+      Size2 = 0
+    end>
+end

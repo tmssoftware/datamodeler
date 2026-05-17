@@ -1,0 +1,198 @@
+object TDataTypeConversionMap
+  ConversionName = 'MS SQL Server 2000 to Firebird 2'
+  OriginalDBTypeID = 'mssql2000'
+  TargetDBTypeID = 'firebird2'
+  ConversionItems = <
+    item
+      OriginalDataType = 'Bigint'
+      TargetDataType = 'Bigint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Bigint (identity)'
+      TargetDataType = 'Bigint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Bit'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Char'
+      TargetDataType = 'Char'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Computed'
+      TargetDataType = 'Computed'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Datetime'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal (identity)'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Float'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Image'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Int'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Int (identity)'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Money'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar'
+      TargetDataType = 'NChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NText'
+      TargetDataType = 'Blob text'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric (identity)'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NVarChar'
+      TargetDataType = 'NChar Varying'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Real'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallDateTime'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallInt'
+      TargetDataType = 'Smallint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallInt (identity)'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallMoney'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Sql_Variant'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Text'
+      TargetDataType = 'Blob text'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TimeStamp'
+      TargetDataType = 'Timestamp'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TinyInt'
+      TargetDataType = 'Smallint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TinyInt (identity)'
+      TargetDataType = 'Smallint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'UniqueIdentifier'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarBinary'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarChar'
+      TargetDataType = 'Varchar'
+      Size = 0
+      Size2 = 0
+    end>
+end

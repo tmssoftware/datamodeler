@@ -1,0 +1,186 @@
+object TDataTypeConversionMap
+  ConversionName = 'Oracle 10g to MS SQL Server 2000'
+  OriginalDBTypeID = 'oracle10g'
+  TargetDBTypeID = 'mssql2000'
+  ConversionItems = <
+    item
+      OriginalDataType = 'Bfile'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary_Double'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary_Float'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Blob'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Char'
+      TargetDataType = 'Char'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Clob'
+      TargetDataType = 'Text'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Date'
+      TargetDataType = 'Datetime'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Interval day to second'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Interval year to month'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Long'
+      TargetDataType = 'Bigint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Long raw'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar'
+      TargetDataType = 'NChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NClob'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Number'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Number (floating point)'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NVarchar2'
+      TargetDataType = 'NVarChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Raw'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Rowid'
+      TargetDataType = 'VarChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp'
+      TargetDataType = 'TimeStamp'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp with local time zone'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp with time zone'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Urowid'
+      TargetDataType = 'VarChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Varchar2'
+      TargetDataType = 'VarChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Float'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Double precision'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Integer'
+      TargetDataType = 'Int'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Smallint'
+      TargetDataType = 'SmallInt'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Real'
+      TargetDataType = 'Real'
+      Size = 0
+      Size2 = 0
+    end>
+end

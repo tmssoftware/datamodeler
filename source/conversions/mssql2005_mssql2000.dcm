@@ -1,0 +1,222 @@
+object TDataTypeConversionMap
+  ConversionName = 'MS SQL Server 2005 to MS SQL Server 2000'
+  OriginalDBTypeID = 'mssql2005'
+  TargetDBTypeID = 'mssql2000'
+  ConversionItems = <
+    item
+      OriginalDataType = 'Bigint'
+      TargetDataType = 'Bigint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Bigint (identity)'
+      TargetDataType = 'Bigint (identity)'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Binary'
+      TargetDataType = 'Binary'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Bit'
+      TargetDataType = 'Bit'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Char'
+      TargetDataType = 'Char'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Computed'
+      TargetDataType = 'Computed'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Datetime'
+      TargetDataType = 'Datetime'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal (identity)'
+      TargetDataType = 'Decimal (identity)'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Float'
+      TargetDataType = 'Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Image'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Int'
+      TargetDataType = 'Int'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Int (identity)'
+      TargetDataType = 'Int (identity)'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Money'
+      TargetDataType = 'Money'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar'
+      TargetDataType = 'NChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NText'
+      TargetDataType = 'NText'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric'
+      TargetDataType = 'Numeric'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric (identity)'
+      TargetDataType = 'Numeric (identity)'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NVarChar'
+      TargetDataType = 'NVarChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Real'
+      TargetDataType = 'Real'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallDateTime'
+      TargetDataType = 'SmallDateTime'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallInt'
+      TargetDataType = 'SmallInt'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallInt (identity)'
+      TargetDataType = 'SmallInt (identity)'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'SmallMoney'
+      TargetDataType = 'SmallMoney'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Sql_Variant'
+      TargetDataType = 'Sql_Variant'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Text'
+      TargetDataType = 'Text'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TimeStamp'
+      TargetDataType = 'TimeStamp'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TinyInt'
+      TargetDataType = 'TinyInt'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'TinyInt (identity)'
+      TargetDataType = 'TinyInt (identity)'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'UniqueIdentifier'
+      TargetDataType = 'UniqueIdentifier'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarBinary'
+      TargetDataType = 'VarBinary'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarChar'
+      TargetDataType = 'VarChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NVarChar(MAX)'
+      TargetDataType = 'NText'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarBinary(MAX)'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'VarChar(MAX)'
+      TargetDataType = 'Text'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'XML'
+      TargetDataType = 'Image'
+      Size = 0
+      Size2 = 0
+    end>
+end

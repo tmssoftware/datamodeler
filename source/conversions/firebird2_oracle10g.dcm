@@ -1,0 +1,107 @@
+object TDataTypeConversionMap
+  ConversionName = 'Firebird 2 to Oracle 10g'
+  OriginalDBTypeID = 'firebird2'
+  TargetDBTypeID = 'oracle10g'
+  ConversionItems = <
+    item
+      OriginalDataType = 'Bigint'
+      TargetDataType = 'Long'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Blob'
+      TargetDataType = 'Blob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Blob text'
+      TargetDataType = 'Clob'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Char'
+      TargetDataType = 'Char'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Computed'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Date'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Decimal'
+      TargetDataType = 'Decimal'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Double precision'
+      TargetDataType = 'Binary_Double'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Float'
+      TargetDataType = 'Binary_Float'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Integer'
+      TargetDataType = 'Integer'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Numeric'
+      TargetDataType = 'Number'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Smallint'
+      TargetDataType = 'Smallint'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Time'
+      TargetDataType = 'Date'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Timestamp'
+      TargetDataType = 'Timestamp'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'Varchar'
+      TargetDataType = 'Varchar2'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar'
+      TargetDataType = 'NChar'
+      Size = 0
+      Size2 = 0
+    end
+    item
+      OriginalDataType = 'NChar Varying'
+      TargetDataType = 'NVarchar2'
+      Size = 0
+      Size2 = 0
+    end>
+end

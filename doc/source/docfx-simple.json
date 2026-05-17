@@ -1,0 +1,57 @@
+{
+  "build": {
+    "content": [
+      {
+        "files": [
+          "guide/**.md",
+          "guide/toc.yml",
+          "*.md",
+          "toc.yml"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**",
+          "files/**"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "dest": "chm/_site_chm",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "globalMetadata": {
+      "_appTitle": "{{title}} documentation",
+      "_appFooter": "{{{product-version}}} <br /> &copy; 2002 - {{year}} tmssoftware.com",
+      "_appLogoPath": "images/{{ProductShortName}}.svg",
+      "_appFaviconPath": "images/{{ProductShortName}}.ico",
+      "_enableSearch": false,
+      "_disableBreadcrumb": true,
+      "_disableContribution": true,
+      "_disableToc": true,
+      "_disableNavbar": true
+    },
+    "postProcessors": [],
+    "noLangKeyword": false
+  }
+}
