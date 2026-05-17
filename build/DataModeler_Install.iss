@@ -1,4 +1,4 @@
-#define DMLocalExeFile "..\source\Win32\Release\dm.exe"
+#define DMLocalExeFile "..\dm\Win32\Release\dm.exe"
 #define DMVersion GetFileProductVersion(DMLocalExeFile)
 #define MyAppName "TMS Data Modeler"
 #define MyAppVerName "TMS Data Modeler "  + DMVersion
@@ -34,7 +34,7 @@ VersionInfoCopyright={#DMAppCopyright}
 ChangesAssociations=true
 WizardImageFile=DM_Setup_Image.bmp
 WizardSmallImageFile=DM_Setup_Image_Small.bmp
-SetupIconFile=..\source\dm.ico
+SetupIconFile=..\dm\dm.ico
 AppComments=.
 AppVersion={#DMVersion}
 AppCopyright={#DMAppCopyright}
@@ -52,7 +52,7 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 
 [Files]
 Source: {#DMLocalExeFile}; DestDir: {app}; Flags: ignoreversion signonce
-Source: ..\source\conversions\*.dcm; DestDir: {app}\conversions; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ..\dm\conversions\*.dcm; DestDir: {app}\conversions; Flags: ignoreversion recursesubdirs createallsubdirs
 ;Source: ..\doc\manual\output\chm\datamodeler_manual.chm; DestDir: {app}; Flags: ignoreversion
 ;Source: ..\doc\manual\output\pdf\datamodeler_manual.pdf; DestDir: {app}; Flags: ignoreversion
 Source: ..\samples\adventureworks.*; DestDir: {app}\samples; Flags: ignoreversion recursesubdirs createallsubdirs
