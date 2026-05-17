@@ -4,6 +4,16 @@ uid: ReleaseNotes
 
 # What's New
 
+## Version 4.0 (May-2026)
+
+- **New**: **TMS Data Modeler full source code is now publicly available**. You can now browse, study and modify the full source code of TMS Data Modeler. The source code is available in [TMSData Modeler GitHub repository](https://github.com/tmssoftware/datamodeler). You can read more about in our [**blog post TMS Data Modeler source code is now available**](https://www.tmssoftware.com/site/blog.asp?post=2476).
+
+- **Improved**: Licensing mechanism is now removed, and licensing tool is not available anymore. Even though you still need a license for commercial usage, the software will not check for license validity anymore, as source code is now fully available.
+
+- **Improved**: Splash screen removed, and self-update mechanism removed.
+
+- **Improved**: Trial version is not available anymore. Existing binaries are fully functional and must be used according to the license agreement.
+
 ## Version 3.13 (May-2022)
 
 - **Fixed**: Exported Aurelius dictionary now also includes parent properties and associations, when the exported entity class is inherited from another entity class. Ref: https://support.tmssoftware.com/t/dictionary-with-inheritance-joined-tables/15429.
