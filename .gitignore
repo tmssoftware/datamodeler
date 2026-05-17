@@ -80,6 +80,7 @@ __recovery/
 
 # Project=specific ignored files
 __smartsetup/
+build/__output
 doc/_output
-source/dm.res
-source/dmversion.res
+dm/Win32/Release/dm.res
+dm/Win32/Release/dmversion.res
