@@ -2046,7 +2046,14 @@ begin
           result := 'TBlob';
       end;
     naComputed:
-      result := 'Variant';
+      case FOptions.DefaultNonNativePascalTypeConvertion of
+       nnptVariant:
+         result := 'Variant';
+       nnptString:
+         result := 'string';
+       nnptInteger:
+         result := 'Integer';
+      end;
   else
     //naUnknown: ;
     ErrorFmt('Delphi type not defined for database native type %s',
