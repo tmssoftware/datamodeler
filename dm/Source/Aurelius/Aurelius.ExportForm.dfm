@@ -17,7 +17,6 @@ object fmAureliusExport: TfmAureliusExport
   DesignSize = (
     726
     545)
-  TextHeight = 13
   object Label2: TLabel
     Left = 8
     Top = 45
@@ -64,7 +63,6 @@ object fmAureliusExport: TfmAureliusExport
       0000FF0BBB00000F0000FFF000FFFFFF0000}
     ReadOnly = False
     BrowseDialogText = 'Select Directory'
-    ExplicitWidth = 708
   end
   object PageControl1: TPageControl
     Left = 8
@@ -75,8 +73,6 @@ object fmAureliusExport: TfmAureliusExport
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 1
     OnChange = PageControl1Change
-    ExplicitWidth = 708
-    ExplicitHeight = 412
     object tsGeneral: TTabSheet
       Caption = 'General Settings'
       ImageIndex = 2
@@ -95,7 +91,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -188,7 +184,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -279,7 +275,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -363,7 +359,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -463,7 +459,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -492,7 +488,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -521,7 +517,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -608,7 +604,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -638,7 +634,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -668,7 +664,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -1058,7 +1054,6 @@ object fmAureliusExport: TfmAureliusExport
             Tag = 0
             Width = 172
           end>
-        ExplicitHeight = 309
         ColWidths = (
           24
           172)
@@ -1296,7 +1291,6 @@ object fmAureliusExport: TfmAureliusExport
                 Tag = 0
                 Width = 125
               end>
-            ExplicitHeight = 341
             ColWidths = (
               24
               125)
@@ -1358,7 +1352,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             EmptyTextStyle = []
             DropWidth = 0
@@ -1600,7 +1594,6 @@ object fmAureliusExport: TfmAureliusExport
                 Tag = 0
                 Width = 188
               end>
-            ExplicitHeight = 230
             ColWidths = (
               24
               188)
@@ -1662,7 +1655,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -1692,7 +1685,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -1722,7 +1715,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -1961,7 +1954,6 @@ object fmAureliusExport: TfmAureliusExport
                 Tag = 0
                 Width = 188
               end>
-            ExplicitHeight = 370
             ColWidths = (
               24
               188)
@@ -2023,7 +2015,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -2095,7 +2087,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             EmptyTextStyle = []
             DropWidth = 0
@@ -2360,7 +2352,7 @@ object fmAureliusExport: TfmAureliusExport
         UrlStyle.BkColor = clWhite
         UrlStyle.Style = [fsUnderline]
         UseStyler = True
-        Version = '3.9.2.0'
+        Version = '3.9.3.0'
         WordWrap = wwNone
         OnChange = SaveProperty
       end
@@ -2388,8 +2380,6 @@ object fmAureliusExport: TfmAureliusExport
     ModalResult = 2
     NumGlyphs = 2
     TabOrder = 4
-    ExplicitLeft = 636
-    ExplicitTop = 507
   end
   object btOk: TBitBtn
     Left = 552
@@ -2401,8 +2391,6 @@ object fmAureliusExport: TfmAureliusExport
     NumGlyphs = 2
     TabOrder = 3
     OnClick = btOkClick
-    ExplicitLeft = 550
-    ExplicitTop = 507
   end
   object Panel3: TPanel
     Left = 0
@@ -2413,7 +2401,6 @@ object fmAureliusExport: TfmAureliusExport
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 5
-    ExplicitWidth = 724
     object Shape1: TShape
       Left = 0
       Top = 37
@@ -2421,7 +2408,6 @@ object fmAureliusExport: TfmAureliusExport
       Height = 1
       Align = alBottom
       Pen.Color = clGray
-      ExplicitWidth = 582
     end
     object Shader1: TPanel
       Left = 0
@@ -2431,7 +2417,6 @@ object fmAureliusExport: TfmAureliusExport
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 724
       object Image1: TImage
         Left = 2
         Top = 3
@@ -2520,7 +2505,6 @@ object fmAureliusExport: TfmAureliusExport
     NumGlyphs = 2
     TabOrder = 2
     OnClick = btSaveWithoutGeneratingClick
-    ExplicitTop = 507
   end
   object FolderDialog1: TFolderDialog
     Options = [fdoNewDialogStyle]

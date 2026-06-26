@@ -181,7 +181,9 @@ procedure TMySQLDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase);
           end
           else
           begin
-            field.DataTypeName := 'computed';
+            if Module.FieldAsString('COLUMN_TYPE').StartsWith('enum') then
+            field.DataTypeName := 'varchar' else
+              field.DataTypeName := 'computed';
             field.Expression := Module.FieldAsString('COLUMN_TYPE');
           end;
         end;

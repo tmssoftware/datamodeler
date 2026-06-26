@@ -673,7 +673,7 @@ begin
       FOptions.DefaultOneToOneMapping := TOneToOneMapping(cbDefaultOneToOneMapping.ItemIndex + 1)
     else
     if (Sender = cbDefaultNonNativePascalTypeConvertion) then
-      FOptions.DefaultNonNativePascalTypeConvertion := TNonNativePascalTypeConvertion(cbDefaultNonNativePascalTypeConvertion.ItemIndex + 1)
+      FOptions.DefaultNonNativePascalTypeConvertion := TNonNativePascalTypeConvertion(cbDefaultNonNativePascalTypeConvertion.ItemIndex)
     else
     if (Sender = cbCheckSequences) then
       FOptions.CheckSequencesMode := TCheckSequencesMode(cbCheckSequences.ItemIndex)
@@ -1458,7 +1458,6 @@ begin
       if SelectedFieldMapping <> nil then
         chFieldNameDefault.Checked := SelectedFieldMapping.DefaultNaming;
     end else
-
     if Sender = cbFieldType then
     begin
       if SelectedFieldMapping <> nil then
@@ -1521,7 +1520,6 @@ begin
       else
         cbOneToOneMapping.ItemIndex := 0;
     end else
-
     if Sender = edManyValuedName then
     begin
       if SelectedManyValuedMapping <> nil then

@@ -13489,7 +13489,6 @@ object fmMenuRibbon: TfmMenuRibbon
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  TextHeight = 13
   object gdipicon: TAdvGDIPPicture
     Left = -16
     Top = -16
@@ -13527,7 +13526,7 @@ object fmMenuRibbon: TfmMenuRibbon
     Top = 0
     Width = 944
     Height = 149
-    ActivePage = pgDiagram
+    ActivePage = pgHome
     Caption.Height = 34
     CaptionButtons = [cbClose, cbMinimize, cbMaximize]
     Hints.MDICloseBtnHint = 'Close'
@@ -13707,7 +13706,6 @@ object fmMenuRibbon: TfmMenuRibbon
       0000}
     TabOrder = 0
     OnMinButtonClick = AdvPagerMinButtonClick
-    ExplicitWidth = 945
     object pgHome: TAdvPage
       Left = -1
       Top = 60
