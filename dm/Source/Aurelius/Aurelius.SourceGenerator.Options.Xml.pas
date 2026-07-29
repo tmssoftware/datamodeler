@@ -124,6 +124,14 @@ begin
   WriteString(mappingsNode, 'MainUnitName', FOptions.MainUnitName);
   WriteString(mappingsNode, 'DictionaryName', FOptions.DictionaryName);
   WriteString(mappingsNode, 'DictionaryUnitName', FOptions.DictionaryUnitName);
+  case FOptions.DefaultNonNativePascalTypeConvertion of
+    nnptVariant: WriteString(mappingsNode,'DefaultNonNativePascalTypeConvertion', 'Variant');
+    nnptString: WriteString(mappingsNode,'DefaultNonNativePascalTypeConvertion', 'String');
+    nnptInteger: WriteString(mappingsNode,'DefaultNonNativePascalTypeConvertion', 'Integer');
+  else
+    // DEFAULT
+    // nnptVariant:
+  end;
   WriteString(mappingsNode, 'Script', FOptions.Script);
   if FOptions.OmitDictionary then
     mappingsNode.Attributes['OmitDictionary'] := 'true';
@@ -371,6 +379,13 @@ begin
   FOptions.OutputDir := ReadString(mappingsNode, 'OutputDir', '');
   FOptions.MainUnitName := ReadString(mappingsNode, 'MainUnitName', 'UnitName');
   FOptions.DictionaryName := ReadString(mappingsNode, 'DictionaryName', 'Dic');
+  if LowerCase(ReadString(mappingsNode, 'DefaultNonNativePascalTypeConvertion', '')) = 'string' then
+    FOptions.DefaultNonNativePascalTypeConvertion := nnptString
+  else
+  if LowerCase(ReadString(mappingsNode, 'DefaultNonNativePascalTypeConvertion', '')) = 'integer' then
+    FOptions.DefaultNonNativePascalTypeConvertion := nnptInteger
+  else
+    FOptions.DefaultNonNativePascalTypeConvertion := nnptVariant;
   FOptions.DictionaryUnitName := ReadString(mappingsNode, 'DictionaryUnitName', '');
   FOptions.Script := ReadString(mappingsNode, 'Script', '');
   FOptions.DefaultAncestorClass := ReadString(mappingsNode, 'DefaultAncestorClass', '');
