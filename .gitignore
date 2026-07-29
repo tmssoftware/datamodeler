@@ -85,3 +85,5 @@ doc/_output
 dm/Win32/Release/dm.res
 dm/Win32/Release/dmversion.res
 tms.config.local.yaml
+dm/dm.res
+dm/dmversion.res
