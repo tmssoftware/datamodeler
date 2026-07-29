@@ -64,7 +64,6 @@ object fmAureliusExport: TfmAureliusExport
       0000FF0BBB00000F0000FFF000FFFFFF0000}
     ReadOnly = False
     BrowseDialogText = 'Select Directory'
-    ExplicitWidth = 708
   end
   object PageControl1: TPageControl
     Left = 8
@@ -75,8 +74,6 @@ object fmAureliusExport: TfmAureliusExport
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 1
     OnChange = PageControl1Change
-    ExplicitWidth = 708
-    ExplicitHeight = 412
     object tsGeneral: TTabSheet
       Caption = 'General Settings'
       ImageIndex = 2
@@ -95,7 +92,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -188,7 +185,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -279,7 +276,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -350,7 +347,7 @@ object fmAureliusExport: TfmAureliusExport
       end
       object GroupBox4: TGroupBox
         Left = 0
-        Top = 300
+        Top = 299
         Width = 293
         Height = 81
         Caption = 'Many Valued Association Naming'
@@ -363,7 +360,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -449,8 +446,8 @@ object fmAureliusExport: TfmAureliusExport
         end
       end
       object GroupBox5: TGroupBox
-        Left = 299
-        Top = 140
+        Left = 300
+        Top = 141
         Width = 390
         Height = 239
         Caption = 'Defaults'
@@ -463,7 +460,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -492,7 +489,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -521,7 +518,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -608,7 +605,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -638,7 +635,7 @@ object fmAureliusExport: TfmAureliusExport
           Color = clWindow
           Version = '2.0.0.9'
           Visible = True
-          ButtonWidth = 21
+          ButtonWidth = 17
           DisabledBorder = False
           Style = csDropDownList
           EmptyTextStyle = []
@@ -658,36 +655,6 @@ object fmAureliusExport: TfmAureliusExport
           LabelFont.Name = 'Tahoma'
           LabelFont.Style = []
           TabOrder = 1
-          OnChange = SaveProperty
-        end
-        object cbDefaultNonNativePascalTypeConvertion: TAdvComboBox
-          Left = 201
-          Top = 168
-          Width = 160
-          Height = 21
-          Color = clWindow
-          Version = '2.0.0.9'
-          Visible = True
-          ButtonWidth = 21
-          DisabledBorder = False
-          Style = csDropDownList
-          EmptyTextStyle = []
-          DropWidth = 0
-          Enabled = True
-          ItemIndex = -1
-          Items.Strings = (
-            'Variant'
-            'String'
-            'Integer')
-          LabelCaption = 'Non Native Pascal type Convertion'
-          LabelPosition = lpTopLeft
-          LabelAlwaysEnabled = True
-          LabelFont.Charset = DEFAULT_CHARSET
-          LabelFont.Color = clWindowText
-          LabelFont.Height = -11
-          LabelFont.Name = 'Tahoma'
-          LabelFont.Style = []
-          TabOrder = 7
           OnChange = SaveProperty
         end
       end
@@ -948,7 +915,6 @@ object fmAureliusExport: TfmAureliusExport
         PrintSettings.FooterFont.Name = 'Tahoma'
         PrintSettings.FooterFont.Style = []
         PrintSettings.PageNumSep = '/'
-        ScrollWidth = 21
         SearchFooter.FindNextCaption = 'Find &next'
         SearchFooter.FindPrevCaption = 'Find &previous'
         SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1186,7 +1152,6 @@ object fmAureliusExport: TfmAureliusExport
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
             PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
             SearchFooter.FindNextCaption = 'Find &next'
             SearchFooter.FindPrevCaption = 'Find &previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1358,7 +1323,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             EmptyTextStyle = []
             DropWidth = 0
@@ -1490,7 +1455,6 @@ object fmAureliusExport: TfmAureliusExport
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
             PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
             SearchFooter.FindNextCaption = 'Find &next'
             SearchFooter.FindPrevCaption = 'Find &previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1662,7 +1626,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -1692,7 +1656,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -1722,7 +1686,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -1851,7 +1815,6 @@ object fmAureliusExport: TfmAureliusExport
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
             PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
             SearchFooter.FindNextCaption = 'Find &next'
             SearchFooter.FindPrevCaption = 'Find &previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -2023,7 +1986,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             Style = csDropDownList
             EmptyTextStyle = []
@@ -2095,7 +2058,7 @@ object fmAureliusExport: TfmAureliusExport
             Color = clWindow
             Version = '2.0.0.9'
             Visible = True
-            ButtonWidth = 21
+            ButtonWidth = 17
             DisabledBorder = False
             EmptyTextStyle = []
             DropWidth = 0
@@ -2260,7 +2223,6 @@ object fmAureliusExport: TfmAureliusExport
         AutoCompletion.StartToken = '(.'
         AutoCorrect.Active = True
         AutoHintParameterPosition = hpBelowCode
-        BkColor = clWindow
         BookmarkGlyph.Data = {
           36050000424D3605000000000000360400002800000010000000100000000100
           0800000000000001000000000000000000000001000000000000000000000000
@@ -2304,6 +2266,7 @@ object fmAureliusExport: TfmAureliusExport
           BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFB7BFBFB7B72525FDFDFD25BFBFBFBF
           BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFBFBFBFBFB725FDFDFDFD2525252525
           25252525252525FDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFD}
+        BorderColor = 15987699
         BorderStyle = bsSingle
         BreakpointColor = 16762823
         BreakpointTextColor = clBlack
@@ -2318,8 +2281,9 @@ object fmAureliusExport: TfmAureliusExport
         Gutter.Font.Height = -13
         Gutter.Font.Name = 'Courier New'
         Gutter.Font.Style = []
-        Gutter.GutterColorTo = clBtnFace
-        Gutter.LineNumberTextColor = clWindowText
+        Gutter.BorderColor = 15987699
+        Gutter.GutterColor = clWhite
+        Gutter.GutterColorTo = clNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
@@ -2340,7 +2304,7 @@ object fmAureliusExport: TfmAureliusExport
         PrintOptions.PrintLineNumbers = False
         RightMarginColor = 14869218
         ScrollHint = False
-        SelColor = clHighlightText
+        SelColor = clBlack
         SelBkColor = clHighlight
         ShowRightMargin = True
         SmartTabs = False
@@ -2388,8 +2352,6 @@ object fmAureliusExport: TfmAureliusExport
     ModalResult = 2
     NumGlyphs = 2
     TabOrder = 4
-    ExplicitLeft = 636
-    ExplicitTop = 507
   end
   object btOk: TBitBtn
     Left = 552
@@ -2401,8 +2363,6 @@ object fmAureliusExport: TfmAureliusExport
     NumGlyphs = 2
     TabOrder = 3
     OnClick = btOkClick
-    ExplicitLeft = 550
-    ExplicitTop = 507
   end
   object Panel3: TPanel
     Left = 0
@@ -2413,7 +2373,6 @@ object fmAureliusExport: TfmAureliusExport
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 5
-    ExplicitWidth = 724
     object Shape1: TShape
       Left = 0
       Top = 37
@@ -2431,7 +2390,6 @@ object fmAureliusExport: TfmAureliusExport
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 724
       object Image1: TImage
         Left = 2
         Top = 3
@@ -2520,7 +2478,6 @@ object fmAureliusExport: TfmAureliusExport
     NumGlyphs = 2
     TabOrder = 2
     OnClick = btSaveWithoutGeneratingClick
-    ExplicitTop = 507
   end
   object FolderDialog1: TFolderDialog
     Options = [fdoNewDialogStyle]
@@ -2574,8 +2531,8 @@ object fmAureliusExport: TfmAureliusExport
     FileExtBasicUnit = '.bsc'
     AutoStyler = True
     ProjectExt = '.ssproj'
-    Left = 528
-    Top = 96
+    Left = 256
+    Top = 232
   end
   object PopupMenu1: TPopupMenu
     Left = 392
@@ -2851,19 +2808,19 @@ object fmAureliusExport: TfmAureliusExport
         RegionType = rtClosed
         ShowComments = False
       end>
-    Left = 624
-    Top = 96
+    Left = 360
+    Top = 232
   end
   object ScrMemoFindDialog1: TScrMemoFindDialog
     NotFoundMessage = 'Finished searching the document. The search item was not found.'
     AdvMemo = mmScript
     Options = [frDown]
-    Left = 524
-    Top = 57
+    Left = 292
+    Top = 297
   end
   object ActionList1: TActionList
-    Left = 576
-    Top = 96
+    Left = 480
+    Top = 208
     object acMemoFind: TAction
       Caption = 'Find'
       ShortCut = 16454
