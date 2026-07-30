@@ -33,7 +33,7 @@ implementation
 
 procedure TfmUserConnectionEditor.FormCreate(Sender: TObject);
 begin
-  CreateFormSize(Self);
+//  CreateFormSize(Self);
   FConfigFrame := TConfigFrameManager.Create;
 end;
 
