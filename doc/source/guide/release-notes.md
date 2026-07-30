@@ -4,6 +4,12 @@ uid: ReleaseNotes
 
 # What's New
 
+## Version 4.1 (July-2026)
+
+- **Improved**: SQL Server connection dialog now offers an option to add custom connection ODBS string parameters. You can add, for example, `TrustServerCertificate=yes` to avoid SSL certificate validation errors when connecting to SQL Server.
+
+- **Improved**: Connection dialogs for all databases now display in correct size. In previous versions some connection dialogs were displayed in a smaller size than expected, making it difficult to read and use.
+
 ## Version 4.0 (May-2026)
 
 - **New**: **TMS Data Modeler full source code is now publicly available**. You can now browse, study and modify the full source code of TMS Data Modeler. The source code is available in [TMSData Modeler GitHub repository](https://github.com/tmssoftware/datamodeler). You can read more about in our [**blog post TMS Data Modeler source code is now available**](https://www.tmssoftware.com/site/blog.asp?post=2476).

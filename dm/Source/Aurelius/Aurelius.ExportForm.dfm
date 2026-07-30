@@ -346,7 +346,7 @@ object fmAureliusExport: TfmAureliusExport
       end
       object GroupBox4: TGroupBox
         Left = 0
-        Top = 300
+        Top = 299
         Width = 293
         Height = 81
         Caption = 'Many Valued Association Naming'
@@ -445,8 +445,8 @@ object fmAureliusExport: TfmAureliusExport
         end
       end
       object GroupBox5: TGroupBox
-        Left = 299
-        Top = 140
+        Left = 300
+        Top = 141
         Width = 390
         Height = 239
         Caption = 'Defaults'
@@ -944,7 +944,6 @@ object fmAureliusExport: TfmAureliusExport
         PrintSettings.FooterFont.Name = 'Tahoma'
         PrintSettings.FooterFont.Style = []
         PrintSettings.PageNumSep = '/'
-        ScrollWidth = 21
         SearchFooter.FindNextCaption = 'Find &next'
         SearchFooter.FindPrevCaption = 'Find &previous'
         SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1181,7 +1180,6 @@ object fmAureliusExport: TfmAureliusExport
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
             PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
             SearchFooter.FindNextCaption = 'Find &next'
             SearchFooter.FindPrevCaption = 'Find &previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1484,7 +1482,6 @@ object fmAureliusExport: TfmAureliusExport
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
             PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
             SearchFooter.FindNextCaption = 'Find &next'
             SearchFooter.FindPrevCaption = 'Find &previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1844,7 +1841,6 @@ object fmAureliusExport: TfmAureliusExport
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
             PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
             SearchFooter.FindNextCaption = 'Find &next'
             SearchFooter.FindPrevCaption = 'Find &previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -2252,7 +2248,6 @@ object fmAureliusExport: TfmAureliusExport
         AutoCompletion.StartToken = '(.'
         AutoCorrect.Active = True
         AutoHintParameterPosition = hpBelowCode
-        BkColor = clWindow
         BookmarkGlyph.Data = {
           36050000424D3605000000000000360400002800000010000000100000000100
           0800000000000001000000000000000000000001000000000000000000000000
@@ -2296,6 +2291,7 @@ object fmAureliusExport: TfmAureliusExport
           BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFB7BFBFB7B72525FDFDFD25BFBFBFBF
           BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFBFBFBFBFB725FDFDFDFD2525252525
           25252525252525FDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFD}
+        BorderColor = 15987699
         BorderStyle = bsSingle
         BreakpointColor = 16762823
         BreakpointTextColor = clBlack
@@ -2310,8 +2306,9 @@ object fmAureliusExport: TfmAureliusExport
         Gutter.Font.Height = -13
         Gutter.Font.Name = 'Courier New'
         Gutter.Font.Style = []
-        Gutter.GutterColorTo = clBtnFace
-        Gutter.LineNumberTextColor = clWindowText
+        Gutter.BorderColor = 15987699
+        Gutter.GutterColor = clWhite
+        Gutter.GutterColorTo = clNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
@@ -2332,7 +2329,7 @@ object fmAureliusExport: TfmAureliusExport
         PrintOptions.PrintLineNumbers = False
         RightMarginColor = 14869218
         ScrollHint = False
-        SelColor = clHighlightText
+        SelColor = clBlack
         SelBkColor = clHighlight
         ShowRightMargin = True
         SmartTabs = False
@@ -2558,8 +2555,8 @@ object fmAureliusExport: TfmAureliusExport
     FileExtBasicUnit = '.bsc'
     AutoStyler = True
     ProjectExt = '.ssproj'
-    Left = 528
-    Top = 96
+    Left = 256
+    Top = 232
   end
   object PopupMenu1: TPopupMenu
     Left = 392
@@ -2835,19 +2832,19 @@ object fmAureliusExport: TfmAureliusExport
         RegionType = rtClosed
         ShowComments = False
       end>
-    Left = 624
-    Top = 96
+    Left = 360
+    Top = 232
   end
   object ScrMemoFindDialog1: TScrMemoFindDialog
     NotFoundMessage = 'Finished searching the document. The search item was not found.'
     AdvMemo = mmScript
     Options = [frDown]
-    Left = 524
-    Top = 57
+    Left = 292
+    Top = 297
   end
   object ActionList1: TActionList
-    Left = 576
-    Top = 96
+    Left = 480
+    Top = 208
     object acMemoFind: TAction
       Caption = 'Find'
       ShortCut = 16454

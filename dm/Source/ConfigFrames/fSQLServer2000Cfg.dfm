@@ -21,25 +21,21 @@ object frSQLServer2000Cfg: TfrSQLServer2000Cfg
         Left = 0
         Top = 0
         Width = 313
-        Height = 319
+        Height = 317
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 423
-        ExplicitHeight = 296
         DesignSize = (
           313
           317)
         object Panel2: TPanel
           Left = 1
-          Top = 34
+          Top = 33
           Width = 307
           Height = 240
           Anchors = []
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitLeft = 13
-          ExplicitTop = 8
           DesignSize = (
             307
             240)
@@ -61,7 +57,7 @@ object frSQLServer2000Cfg: TfrSQLServer2000Cfg
             Left = 8
             Top = 22
             Width = 289
-            Height = 21
+            Height = 23
             TabOrder = 0
             OnClick = cboServersClick
             OnDropDown = cboServersDropDown
@@ -111,7 +107,7 @@ object frSQLServer2000Cfg: TfrSQLServer2000Cfg
               Left = 24
               Top = 76
               Width = 121
-              Height = 21
+              Height = 23
               Enabled = False
               TabOrder = 2
             end
@@ -120,7 +116,7 @@ object frSQLServer2000Cfg: TfrSQLServer2000Cfg
             Left = 8
             Top = 163
             Width = 289
-            Height = 21
+            Height = 23
             TabOrder = 2
             OnDropDown = cboDatabasesDropDown
           end
@@ -168,14 +164,30 @@ object frSQLServer2000Cfg: TfrSQLServer2000Cfg
         Height = 15
         Caption = 'ODBC Driver'
       end
+      object Label6: TLabel
+        Left = 6
+        Top = 56
+        Width = 122
+        Height = 15
+        Caption = 'Extra ODBC parameters'
+        FocusControl = edOdbcAdvanced
+      end
       object cbODBCDriver: TComboBox
         Left = 6
         Top = 24
         Width = 299
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnDropDown = cbODBCDriverDropDown
+      end
+      object edOdbcAdvanced: TEdit
+        Left = 6
+        Top = 72
+        Width = 299
+        Height = 23
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 1
       end
     end
   end
