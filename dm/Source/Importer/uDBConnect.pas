@@ -43,6 +43,7 @@ const
   SDBO_SqlServerPassword = 'PASSWORD';
   SDBO_SqlServerIntegratedSecurity = 'INTEGRATED SECURITY';
   SDBO_SqlServerODBCDriver = 'ODBC DRIVER';
+  SDBO_SqlServerODBCAdvanced = 'ODBC ADVANCED';
 
 type
   TDBConnection = class
@@ -217,6 +218,7 @@ begin
                 OSAuthent :=
                   GetDBParamValue(SDBO_SqlServerIntegratedSecurity) = 'TRUE';
                 ODBCDriver := GetDBParamValue(SDBO_SqlServerODBCDriver);
+                ODBCAdvanced := GetDBParamValue(SDBO_SqlServerODBCAdvanced);
               end;
             fdbSqlAzure:
               begin

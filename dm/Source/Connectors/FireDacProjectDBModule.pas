@@ -42,6 +42,8 @@ type
     procedure SetVendorLib(const Value: string);
     function GetODBCDriver: string;
     procedure SetODBCDriver(const Value: string);
+    function GetODBCAdvanced: string;
+    procedure SetODBCAdvanced(const Value: string);
   protected
     function GetDBConnected: boolean; override;
     procedure SetDBConnected(Value: boolean); override;
@@ -57,6 +59,7 @@ type
     property Database: string read GetDatabase write SetDatabase;
     property OSAuthent: boolean read GetOSAuthent write SetOSAuthent;
     property ODBCDriver: string read GetODBCDriver write SetODBCDriver;
+    property ODBCAdvanced: string read GetODBCAdvanced write SetODBCAdvanced;
     property Password: string read GetPassword write SetPassword;
     property Port: integer read GetPort write SetPort;
     property Server: string read GetServer write SetServer;
@@ -74,6 +77,7 @@ const
   ADPARAM_USERNAME = 'User_Name';
   ADPARAM_OPENMODE = 'OpenMode';
   ADPARAM_CHARSET = 'CharacterSet';
+  ADPARAM_ODBCADVANCED = 'ODBCAdvanced';
 
 implementation
 
@@ -102,6 +106,11 @@ end;
 function TdmFireDacProjectDBModule.GetDriverID: string;
 begin
   result := FConnection.DriverName;
+end;
+
+function TdmFireDacProjectDBModule.GetODBCAdvanced: string;
+begin
+  result := FConnection.Params.Values[ADPARAM_ODBCADVANCED];
 end;
 
 function TdmFireDacProjectDBModule.GetODBCDriver: string;
@@ -161,6 +170,11 @@ procedure TdmFireDacProjectDBModule.SetDriverID(const Value: string);
 begin
   FConnection.Params.Clear;
   FConnection.DriverName := Value;
+end;
+
+procedure TdmFireDacProjectDBModule.SetODBCAdvanced(const Value: string);
+begin
+  FConnection.Params.Values[ADPARAM_ODBCADVANCED] := Value;
 end;
 
 procedure TdmFireDacProjectDBModule.SetODBCDriver(const Value: string);
