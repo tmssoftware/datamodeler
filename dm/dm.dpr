@@ -5,11 +5,6 @@ program dm;
 {$I dm.inc}
 
 uses
-  madExcept,
-  madLinkDisAsm,
-  madListHardware,
-  madListProcesses,
-  madListModules,
   {$IFDEF EurekaLog}
   EMemLeaks,
   {$ENDIF EurekaLog}
