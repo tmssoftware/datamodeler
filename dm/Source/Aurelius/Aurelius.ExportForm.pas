@@ -119,6 +119,7 @@ type
     acMemoFind: TAction;
     Button2: TButton;
     cbLegacyDictionary: TCheckBox;
+    cbDefaultNonNativePascalTypeConvertion: TAdvComboBox;
     procedure grTablesClick(Sender: TObject);
     procedure grFieldsClick(Sender: TObject);
     procedure grAssociationsClick(Sender: TObject);
