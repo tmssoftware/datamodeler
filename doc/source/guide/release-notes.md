@@ -12,6 +12,8 @@ uid: ReleaseNotes
 
 ## Version 4.1 (July-2026)
 
+- **Improved**: Firebird databases now provide a `Smallint (Identity)` data type, allowing smallint identity columns to be imported and generated.
+
 - **Improved**: SQL Server connection dialog now offers an option to add custom connection ODBS string parameters. You can add, for example, `TrustServerCertificate=yes` to avoid SSL certificate validation errors when connecting to SQL Server.
 
 - **Improved**: Connection dialogs for all databases now display in correct size. In previous versions some connection dialogs were displayed in a smaller size than expected, making it difficult to read and use.
