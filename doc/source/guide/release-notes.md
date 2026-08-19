@@ -4,6 +4,12 @@ uid: ReleaseNotes
 
 # What's New
 
+## Version 4.2 (Aug-2026)
+
+- **New**: Aurelius export now allows choosing how database columns with no native Pascal equivalent are mapped. In previous versions such columns were always exported as `Variant` properties, which is still the default. You can now choose `string` or `Integer` instead, using the new **Map Non-Native Types As** option, in the **Defaults** group of the Aurelius export dialog.
+
+- **Improved**: MySQL importer now imports `enum` columns as `varchar` fields, sized to hold the longest value accepted by the column. In previous versions such columns were imported as computed fields.
+
 ## Version 4.1 (July-2026)
 
 - **Improved**: SQL Server connection dialog now offers an option to add custom connection ODBS string parameters. You can add, for example, `TrustServerCertificate=yes` to avoid SSL certificate validation errors when connecting to SQL Server.
