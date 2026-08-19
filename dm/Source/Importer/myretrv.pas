@@ -181,8 +181,14 @@ procedure TMySQLDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase);
           end
           else
           begin
-            if Module.FieldAsString('COLUMN_TYPE').StartsWith('enum') then
-            field.DataTypeName := 'varchar' else
+            {enum columns have no direct equivalent, but they can be imported as a
+             varchar big enough to hold the longest value accepted by the column}
+            if SameText(Copy(Module.FieldAsString('COLUMN_TYPE'), 1, 4), 'enum') then
+            begin
+              field.DataTypeName := 'varchar';
+              field.Size := Module.FieldAsInteger('CHARACTER_MAXIMUM_LENGTH');
+            end
+            else
               field.DataTypeName := 'computed';
             field.Expression := Module.FieldAsString('COLUMN_TYPE');
           end;
