@@ -22,6 +22,8 @@ type
   TCascadeDefinition = cdNone..cdAll;
   TCheckSequencesMode = (csAuto, csAlways, csNever);
 
+  TNonNativePascalTypeConversion = (nnptVariant, nnptString, nnptInteger);
+
   TFieldMapping = class
   private
     FPropertyName: string;
@@ -112,6 +114,7 @@ type
     FDefaultManyValuedFetchMode: TFetchMode;
     FDefaultAssociationCascadeDefinition: TCascadeDefinition;
     FDefaultOneToOneMapping: TOneToOneMapping;
+    FDefaultNonNativePascalTypeConversion: TNonNativePascalTypeConversion;
     FDefaultAncestorClass: string;
     FMainUnitName: string;
     FOmitDictionary: boolean;
@@ -150,6 +153,7 @@ type
     property DefaultManyValuedFetchMode: TFetchMode read FDefaultManyValuedFetchMode write FDefaultManyValuedFetchMode;
     property DefaultAssociationCascadeDefinition: TCascadeDefinition read FDefaultAssociationCascadeDefinition write FDefaultAssociationCascadeDefinition;
     property DefaultOneToOneMapping: TOneToOneMapping read FDefaultOneToOneMapping write FDefaultOneToOneMapping;
+    property DefaultNonNativePascalTypeConversion: TNonNativePascalTypeConversion read FDefaultNonNativePascalTypeConversion write FDefaultNonNativePascalTypeConversion;
     property DefaultAncestorClass: string read FDefaultAncestorClass write FDefaultAncestorClass;
     property DefaultDynPropContainer: string read FDefaultDynPropContainer write FDefaultDynPropContainer;
     property CheckSequencesMode: TCheckSequencesMode read FCheckSequencesMode write FCheckSequencesMode;
@@ -212,6 +216,7 @@ begin
   FDefaultManyValuedFetchMode := fmLazy;
   FDefaultAssociationCascadeDefinition := cdAllButRemove;
   FDefaultOneToOneMapping := omAssociation;
+  FDefaultNonNativePascalTypeConversion := nnptVariant;
   FCheckSequencesMode := csAuto;
   FMainUnitName := 'UnitName';
   FOmitDictionary := false;

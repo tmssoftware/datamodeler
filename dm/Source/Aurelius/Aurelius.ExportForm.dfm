@@ -657,6 +657,36 @@ object fmAureliusExport: TfmAureliusExport
           TabOrder = 1
           OnChange = SaveProperty
         end
+        object cbDefaultNonNativePascalTypeConversion: TAdvComboBox
+          Left = 201
+          Top = 168
+          Width = 160
+          Height = 21
+          Color = clWindow
+          Version = '2.0.0.9'
+          Visible = True
+          ButtonWidth = 17
+          DisabledBorder = False
+          Style = csDropDownList
+          EmptyTextStyle = []
+          DropWidth = 0
+          Enabled = True
+          ItemIndex = -1
+          Items.Strings = (
+            'Variant'
+            'String'
+            'Integer')
+          LabelCaption = 'Map Non-Native Types As:'
+          LabelPosition = lpTopLeft
+          LabelAlwaysEnabled = True
+          LabelFont.Charset = DEFAULT_CHARSET
+          LabelFont.Color = clWindowText
+          LabelFont.Height = -11
+          LabelFont.Name = 'Tahoma'
+          LabelFont.Style = []
+          TabOrder = 7
+          OnChange = SaveProperty
+        end
       end
       object edMainUnitName: TAdvEdit
         Left = 79

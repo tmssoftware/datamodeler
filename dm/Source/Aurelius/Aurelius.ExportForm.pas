@@ -119,6 +119,7 @@ type
     acMemoFind: TAction;
     Button2: TButton;
     cbLegacyDictionary: TCheckBox;
+    cbDefaultNonNativePascalTypeConversion: TAdvComboBox;
     procedure grTablesClick(Sender: TObject);
     procedure grFieldsClick(Sender: TObject);
     procedure grAssociationsClick(Sender: TObject);
@@ -669,6 +670,9 @@ begin
     else
     if (Sender = cbDefaultOneToOneMapping) then
       FOptions.DefaultOneToOneMapping := TOneToOneMapping(cbDefaultOneToOneMapping.ItemIndex + 1)
+    else
+    if (Sender = cbDefaultNonNativePascalTypeConversion) then
+      FOptions.DefaultNonNativePascalTypeConversion := TNonNativePascalTypeConversion(cbDefaultNonNativePascalTypeConversion.ItemIndex)
     else
     if (Sender = cbCheckSequences) then
       FOptions.CheckSequencesMode := TCheckSequencesMode(cbCheckSequences.ItemIndex)
@@ -1599,6 +1603,9 @@ begin
     else
     if Sender = cbDefaultOneToOneMapping then
       cbDefaultOneToOneMapping.ItemIndex := Ord(FOptions.DefaultOneToOneMapping) - 1
+    else
+    if Sender = cbDefaultNonNativePascalTypeConversion then
+      cbDefaultNonNativePascalTypeConversion.ItemIndex := Ord(FOptions.DefaultNonNativePascalTypeConversion)
     else
     if Sender = cbCheckSequences then
       cbCheckSequences.ItemIndex := Ord(FOptions.CheckSequencesMode)
