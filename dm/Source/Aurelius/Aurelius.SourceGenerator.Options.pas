@@ -22,7 +22,7 @@ type
   TCascadeDefinition = cdNone..cdAll;
   TCheckSequencesMode = (csAuto, csAlways, csNever);
 
-  TNonNativePascalTypeConvertion = (nnptVariant, nnptString, nnptInteger);
+  TNonNativePascalTypeConversion = (nnptVariant, nnptString, nnptInteger);
 
   TFieldMapping = class
   private
@@ -108,13 +108,13 @@ type
     FFieldNameSource: TBaseNameSource;
     FAssociationNameFormat: string;
     FAssociationNameSource: TAssociationNameSource;
-    FDefaultNonNativePascalTypeConvertion: TNonNativePascalTypeConvertion;
     FManyValuedNameFormat: string;
     FManyValuedNameSource: TAssociationNameSource;
     FDefaultAssociationFetchMode: TFetchMode;
     FDefaultManyValuedFetchMode: TFetchMode;
     FDefaultAssociationCascadeDefinition: TCascadeDefinition;
     FDefaultOneToOneMapping: TOneToOneMapping;
+    FDefaultNonNativePascalTypeConversion: TNonNativePascalTypeConversion;
     FDefaultAncestorClass: string;
     FMainUnitName: string;
     FOmitDictionary: boolean;
@@ -148,12 +148,12 @@ type
     property OutputDir: string read FOutputDir write FOutputDir;
     property Tables: TObjectDictionary<integer, TTableMapping> read FTableMappings;
     property Associations: TObjectDictionary<integer, TAssociationMapping> read FAssociationMappings;
-    property DefaultNonNativePascalTypeConvertion: TNonNativePascalTypeConvertion read FDefaultNonNativePascalTypeConvertion write FDefaultNonNativePascalTypeConvertion;
 
     property DefaultAssociationFetchMode: TFetchMode read FDefaultAssociationFetchMode write FDefaultAssociationFetchMode;
     property DefaultManyValuedFetchMode: TFetchMode read FDefaultManyValuedFetchMode write FDefaultManyValuedFetchMode;
     property DefaultAssociationCascadeDefinition: TCascadeDefinition read FDefaultAssociationCascadeDefinition write FDefaultAssociationCascadeDefinition;
     property DefaultOneToOneMapping: TOneToOneMapping read FDefaultOneToOneMapping write FDefaultOneToOneMapping;
+    property DefaultNonNativePascalTypeConversion: TNonNativePascalTypeConversion read FDefaultNonNativePascalTypeConversion write FDefaultNonNativePascalTypeConversion;
     property DefaultAncestorClass: string read FDefaultAncestorClass write FDefaultAncestorClass;
     property DefaultDynPropContainer: string read FDefaultDynPropContainer write FDefaultDynPropContainer;
     property CheckSequencesMode: TCheckSequencesMode read FCheckSequencesMode write FCheckSequencesMode;
@@ -216,7 +216,7 @@ begin
   FDefaultManyValuedFetchMode := fmLazy;
   FDefaultAssociationCascadeDefinition := cdAllButRemove;
   FDefaultOneToOneMapping := omAssociation;
-  FDefaultNonNativePascalTypeConvertion := nnptVariant;
+  FDefaultNonNativePascalTypeConversion := nnptVariant;
   FCheckSequencesMode := csAuto;
   FMainUnitName := 'UnitName';
   FOmitDictionary := false;

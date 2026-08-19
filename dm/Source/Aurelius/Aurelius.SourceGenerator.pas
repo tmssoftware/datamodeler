@@ -654,7 +654,7 @@ var
   lazy: boolean;
 begin
   columnProps := '';
-  readOnly := AField.DataType.Counter; // or AField.DataType.Computed;
+  readOnly := AField.DataType.Counter or AField.DataType.Computed;
   lazy := IsBlob(PropertyType(AField));
   if AField.Required then
     columnProps := AppendWithComma(columnProps, 'TColumnProp.Required');
@@ -1154,7 +1154,7 @@ begin
     field.CustomAttributes.Add(joinAttr);
     joinAttr.Name := 'JoinColumn';
     columnProps := '';
-    readOnly := childField.DataType.Counter; //or childField.DataType.Computed;
+    readOnly := childField.DataType.Counter or childField.DataType.Computed;
     if childField.Required then
       columnProps := AppendWithComma(columnProps, 'TColumnProp.Required');
     if readOnly then
@@ -1568,7 +1568,7 @@ begin
   prop.ReadMember := field.Name;
 
   // Careful when changing the code below. There are other parts of code that use the same logic. Search for it!
-  prop.HasSetter := true; // not AField.DataType.Computed;
+  prop.HasSetter := not AField.DataType.Computed;
   if prop.HasSetter then
     prop.WriteMember := field.Name;
 
@@ -2046,7 +2046,15 @@ begin
           result := 'TBlob';
       end;
     naComputed:
-      result := 'Variant';
+      case FOptions.DefaultNonNativePascalTypeConversion of
+        nnptString:
+          result := 'string';
+        nnptInteger:
+          result := 'Integer';
+      else
+        // nnptVariant
+        result := 'Variant';
+      end;
   else
     //naUnknown: ;
     ErrorFmt('Delphi type not defined for database native type %s',

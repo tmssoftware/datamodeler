@@ -211,6 +211,13 @@ begin
     // omAssociation: default
   end;
 
+  case FOptions.DefaultNonNativePascalTypeConversion of
+    nnptString: mappingsNode.Attributes['DefaultNonNativePascalTypeConversion'] := 'string';
+    nnptInteger: mappingsNode.Attributes['DefaultNonNativePascalTypeConversion'] := 'integer';
+  else
+    // nnptVariant: default
+  end;
+
   tablesNode := mappingsNode.AddChild('Tables');
   for tableEntry in FOptions.Tables do
     WriteTableMapping(tablesNode, tableEntry.Key, tableEntry.Value);
@@ -438,6 +445,14 @@ begin
     FOptions.CheckSequencesMode := csNever
   else
     FOptions.CheckSequencesMode := csAuto;
+
+  if LowerCase(ReadString(mappingsNode, 'DefaultNonNativePascalTypeConversion', '')) = 'string' then
+    FOptions.DefaultNonNativePascalTypeConversion := nnptString
+  else
+  if LowerCase(ReadString(mappingsNode, 'DefaultNonNativePascalTypeConversion', '')) = 'integer' then
+    FOptions.DefaultNonNativePascalTypeConversion := nnptInteger
+  else
+    FOptions.DefaultNonNativePascalTypeConversion := nnptVariant;
 
   tablesNode := mappingsNode.ChildNodes.FindNode('Tables');
   if tablesNode <> nil then
