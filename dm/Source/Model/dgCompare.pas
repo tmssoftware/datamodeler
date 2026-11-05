@@ -417,7 +417,7 @@ begin
   begin
     if OldField.ConstraintNotNullName > '' then
       ActionRemoveConstraintFieldNotNull(OldField);
-    if OldField.ConstraintNotNullName > '' then
+    if NewField.ConstraintNotNullName > '' then
       ActionCreateConstraintFieldNotNull(NewField);
   end;
 

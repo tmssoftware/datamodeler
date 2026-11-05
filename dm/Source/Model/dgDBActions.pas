@@ -692,12 +692,18 @@ end;
 { TatCreateTableAction }
 
 procedure TatCreateTableAction.ApplyDBAction(ADictionary: TGDAODatabase);
+var
+  i: integer;
 begin
   inherited;
   with ADictionary.AddTable(Table.TableName) do
   begin
     Assign(Self.Table);
     UpdateID;
+    // Assign copied the FIDs of the source dictionary, which may collide with FIDs
+    // already used in ADictionary. Give every field a fresh FID from ADictionary counters.
+    for i := 0 to Fields.Count - 1 do
+      Fields[i].UpdateId;
   end;
 end;
 
