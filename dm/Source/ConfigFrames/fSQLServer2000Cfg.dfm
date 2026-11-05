@@ -189,6 +189,15 @@ object frSQLServer2000Cfg: TfrSQLServer2000Cfg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
       end
+      object cbTrustServerCertificate: TCheckBox
+        Left = 6
+        Top = 104
+        Width = 299
+        Height = 17
+        Anchors = [akLeft, akTop, akRight]
+        Caption = 'Trust server certificate'
+        TabOrder = 2
+      end
     end
   end
   object FDPhysMSSQLDriverLink1: TFDPhysMSSQLDriverLink

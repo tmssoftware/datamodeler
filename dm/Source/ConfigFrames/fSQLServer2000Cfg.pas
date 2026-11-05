@@ -29,6 +29,7 @@ type
     TabSheet2: TTabSheet;
     cbODBCDriver: TComboBox;
     Label2: TLabel;
+    cbTrustServerCertificate: TCheckBox;
     FDPhysMSSQLDriverLink1: TFDPhysMSSQLDriverLink;
     Label6: TLabel;
     edOdbcAdvanced: TEdit;
@@ -298,6 +299,10 @@ begin
     else
       r.Values['INTEGRATED SECURITY'] := 'FALSE';
     r.Values['ODBC DRIVER'] := cbODBCDriver.Text;
+    if cbTrustServerCertificate.Checked then
+      r.Values[SDBO_SqlServerTrustServerCertificate] := 'TRUE'
+    else
+      r.Values[SDBO_SqlServerTrustServerCertificate] := 'FALSE';
     r.Values['ODBC ADVANCED'] := edOdbcAdvanced.Text;
     Result := r.Text;
   finally
@@ -331,6 +336,7 @@ begin
     edUserName.Text := r.Values['USER NAME'];
     FedPassword.Text := UndoTheStr(r.Values['PASSWORD']);
     cbODBCDriver.Text := r.Values['ODBC DRIVER'];
+    cbTrustServerCertificate.Checked := SameText(r.Values[SDBO_SqlServerTrustServerCertificate], 'TRUE');
     edOdbcAdvanced.Text := r.Values['ODBC ADVANCED'];
     if SameText(r.Values['INTEGRATED SECURITY'], 'FALSE') then
       rbLoginInfo.Checked := true
