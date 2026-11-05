@@ -35,6 +35,7 @@ type
     cbDbType: TComboBox;
     cbConnection: TComboBox;
     acCancel: TAction;
+    btEditConnection: TButton;
     procedure FormShow(Sender: TObject);
     procedure acNextExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -47,6 +48,8 @@ type
     procedure acCancelUpdate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btEditConnectionClick(Sender: TObject);
+    procedure cbConnectionChange(Sender: TObject);
   private
     FMetaData      : TAppMetaData;
     FStep         : TImportStep;
@@ -103,6 +106,7 @@ begin
   rExisting.Hide;
   lbConnection.Hide;
   cbConnection.Hide;
+  btEditConnection.Hide;
   rNew.Checked := True;
   ActiveControl := cbDBType;
   FSaveFrame.cbSave.Checked := true;
@@ -291,11 +295,26 @@ begin
   acBack.Enabled := (FStep in [paPassword, paConfiguration]);
 end;
 
+procedure TfmImportWizard.cbConnectionChange(Sender: TObject);
+begin
+  btEditConnection.Enabled := rExisting.Checked and (cbConnection.ItemIndex > -1);
+end;
+
+// Edits the selected saved connection (e.g. to fix a setting that makes the import fail)
+procedure TfmImportWizard.btEditConnectionClick(Sender: TObject);
+begin
+  if cbConnection.ItemIndex = -1 then
+    Exit;
+  if TConnectionSetting(cbConnection.Items.Objects[cbConnection.ItemIndex]).EditSettingDlg then
+    SystemConfig.SaveUserConnectionsFile;
+end;
+
 procedure TfmImportWizard.rExistingClick(Sender: TObject);
 begin
   // existing
   lbConnection.Enabled := rExisting.Checked;
   EnableControl(cbConnection, rExisting.Checked);
+  cbConnectionChange(nil);
   // new
   lbDBType.Enabled := rNew.Checked;
   EnableControl(cbDBType, rNew.Checked);

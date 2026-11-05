@@ -543,6 +543,16 @@ object fmImportWizard: TfmImportWizard
           Style = csDropDownList
           Sorted = True
           TabOrder = 3
+          OnChange = cbConnectionChange
+        end
+        object btEditConnection: TButton
+          Left = 382
+          Top = 102
+          Width = 75
+          Height = 23
+          Caption = 'E&dit...'
+          TabOrder = 4
+          OnClick = btEditConnectionClick
         end
       end
     end
