@@ -218,6 +218,21 @@ begin
     // nnptVariant: default
   end;
 
+  case FOptions.DefaultGuidIdGenerator of
+    dgSmartGuid: mappingsNode.Attributes['DefaultGuidIdGenerator'] := 'smartguid';
+    dgNone: mappingsNode.Attributes['DefaultGuidIdGenerator'] := 'none';
+  else
+    // dgGuid: default
+  end;
+
+  case FOptions.DefaultStringIdGenerator of
+    dsUuid38: mappingsNode.Attributes['DefaultStringIdGenerator'] := 'uuid38';
+    dsUuid36: mappingsNode.Attributes['DefaultStringIdGenerator'] := 'uuid36';
+    dsUuid32: mappingsNode.Attributes['DefaultStringIdGenerator'] := 'uuid32';
+  else
+    // dsNone: default
+  end;
+
   tablesNode := mappingsNode.AddChild('Tables');
   for tableEntry in FOptions.Tables do
     WriteTableMapping(tablesNode, tableEntry.Key, tableEntry.Value);
@@ -453,6 +468,25 @@ begin
     FOptions.DefaultNonNativePascalTypeConversion := nnptInteger
   else
     FOptions.DefaultNonNativePascalTypeConversion := nnptVariant;
+
+  if LowerCase(ReadString(mappingsNode, 'DefaultGuidIdGenerator', '')) = 'smartguid' then
+    FOptions.DefaultGuidIdGenerator := dgSmartGuid
+  else
+  if LowerCase(ReadString(mappingsNode, 'DefaultGuidIdGenerator', '')) = 'none' then
+    FOptions.DefaultGuidIdGenerator := dgNone
+  else
+    FOptions.DefaultGuidIdGenerator := dgGuid;
+
+  if LowerCase(ReadString(mappingsNode, 'DefaultStringIdGenerator', '')) = 'uuid38' then
+    FOptions.DefaultStringIdGenerator := dsUuid38
+  else
+  if LowerCase(ReadString(mappingsNode, 'DefaultStringIdGenerator', '')) = 'uuid36' then
+    FOptions.DefaultStringIdGenerator := dsUuid36
+  else
+  if LowerCase(ReadString(mappingsNode, 'DefaultStringIdGenerator', '')) = 'uuid32' then
+    FOptions.DefaultStringIdGenerator := dsUuid32
+  else
+    FOptions.DefaultStringIdGenerator := dsNone;
 
   tablesNode := mappingsNode.ChildNodes.FindNode('Tables');
   if tablesNode <> nil then

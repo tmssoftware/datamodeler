@@ -24,6 +24,10 @@ type
 
   TNonNativePascalTypeConversion = (nnptVariant, nnptString, nnptInteger);
 
+  // Id generator of entities whose Id is a single GUID / single string field
+  TDefaultGuidIdGenerator = (dgGuid, dgSmartGuid, dgNone);
+  TDefaultStringIdGenerator = (dsNone, dsUuid38, dsUuid36, dsUuid32);
+
   TFieldMapping = class
   private
     FPropertyName: string;
@@ -115,6 +119,8 @@ type
     FDefaultAssociationCascadeDefinition: TCascadeDefinition;
     FDefaultOneToOneMapping: TOneToOneMapping;
     FDefaultNonNativePascalTypeConversion: TNonNativePascalTypeConversion;
+    FDefaultGuidIdGenerator: TDefaultGuidIdGenerator;
+    FDefaultStringIdGenerator: TDefaultStringIdGenerator;
     FDefaultAncestorClass: string;
     FMainUnitName: string;
     FOmitDictionary: boolean;
@@ -154,6 +160,8 @@ type
     property DefaultAssociationCascadeDefinition: TCascadeDefinition read FDefaultAssociationCascadeDefinition write FDefaultAssociationCascadeDefinition;
     property DefaultOneToOneMapping: TOneToOneMapping read FDefaultOneToOneMapping write FDefaultOneToOneMapping;
     property DefaultNonNativePascalTypeConversion: TNonNativePascalTypeConversion read FDefaultNonNativePascalTypeConversion write FDefaultNonNativePascalTypeConversion;
+    property DefaultGuidIdGenerator: TDefaultGuidIdGenerator read FDefaultGuidIdGenerator write FDefaultGuidIdGenerator;
+    property DefaultStringIdGenerator: TDefaultStringIdGenerator read FDefaultStringIdGenerator write FDefaultStringIdGenerator;
     property DefaultAncestorClass: string read FDefaultAncestorClass write FDefaultAncestorClass;
     property DefaultDynPropContainer: string read FDefaultDynPropContainer write FDefaultDynPropContainer;
     property CheckSequencesMode: TCheckSequencesMode read FCheckSequencesMode write FCheckSequencesMode;
@@ -217,6 +225,8 @@ begin
   FDefaultAssociationCascadeDefinition := cdAllButRemove;
   FDefaultOneToOneMapping := omAssociation;
   FDefaultNonNativePascalTypeConversion := nnptVariant;
+  FDefaultGuidIdGenerator := dgGuid;
+  FDefaultStringIdGenerator := dsNone;
   FCheckSequencesMode := csAuto;
   FMainUnitName := 'UnitName';
   FOmitDictionary := false;

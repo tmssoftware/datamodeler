@@ -120,6 +120,8 @@ type
     Button2: TButton;
     cbLegacyDictionary: TCheckBox;
     cbDefaultNonNativePascalTypeConversion: TAdvComboBox;
+    cbDefaultGuidIdGenerator: TAdvComboBox;
+    cbDefaultStringIdGenerator: TAdvComboBox;
     procedure grTablesClick(Sender: TObject);
     procedure grFieldsClick(Sender: TObject);
     procedure grAssociationsClick(Sender: TObject);
@@ -673,6 +675,12 @@ begin
     else
     if (Sender = cbDefaultNonNativePascalTypeConversion) then
       FOptions.DefaultNonNativePascalTypeConversion := TNonNativePascalTypeConversion(cbDefaultNonNativePascalTypeConversion.ItemIndex)
+    else
+    if (Sender = cbDefaultGuidIdGenerator) then
+      FOptions.DefaultGuidIdGenerator := TDefaultGuidIdGenerator(cbDefaultGuidIdGenerator.ItemIndex)
+    else
+    if (Sender = cbDefaultStringIdGenerator) then
+      FOptions.DefaultStringIdGenerator := TDefaultStringIdGenerator(cbDefaultStringIdGenerator.ItemIndex)
     else
     if (Sender = cbCheckSequences) then
       FOptions.CheckSequencesMode := TCheckSequencesMode(cbCheckSequences.ItemIndex)
@@ -1606,6 +1614,12 @@ begin
     else
     if Sender = cbDefaultNonNativePascalTypeConversion then
       cbDefaultNonNativePascalTypeConversion.ItemIndex := Ord(FOptions.DefaultNonNativePascalTypeConversion)
+    else
+    if Sender = cbDefaultGuidIdGenerator then
+      cbDefaultGuidIdGenerator.ItemIndex := Ord(FOptions.DefaultGuidIdGenerator)
+    else
+    if Sender = cbDefaultStringIdGenerator then
+      cbDefaultStringIdGenerator.ItemIndex := Ord(FOptions.DefaultStringIdGenerator)
     else
     if Sender = cbCheckSequences then
       cbCheckSequences.ItemIndex := Ord(FOptions.CheckSequencesMode)

@@ -687,6 +687,73 @@ object fmAureliusExport: TfmAureliusExport
           TabOrder = 7
           OnChange = SaveProperty
         end
+        object cbDefaultGuidIdGenerator: TAdvComboBox
+          Left = 9
+          Top = 212
+          Width = 175
+          Height = 21
+          Hint = 'Generator of entities whose Id is a single GUID field'
+          Color = clWindow
+          Version = '2.0.0.9'
+          Visible = True
+          ButtonWidth = 17
+          DisabledBorder = False
+          Style = csDropDownList
+          EmptyTextStyle = []
+          DropWidth = 0
+          Enabled = True
+          ItemIndex = -1
+          Items.Strings = (
+            'Guid'
+            'SmartGuid'
+            'None')
+          LabelCaption = 'GUID Id Generator:'
+          LabelPosition = lpTopLeft
+          LabelAlwaysEnabled = True
+          LabelFont.Charset = DEFAULT_CHARSET
+          LabelFont.Color = clWindowText
+          LabelFont.Height = -11
+          LabelFont.Name = 'Tahoma'
+          LabelFont.Style = []
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 8
+          OnChange = SaveProperty
+        end
+        object cbDefaultStringIdGenerator: TAdvComboBox
+          Left = 201
+          Top = 212
+          Width = 160
+          Height = 21
+          Hint = 'Generator of entities whose Id is a single string field'
+          Color = clWindow
+          Version = '2.0.0.9'
+          Visible = True
+          ButtonWidth = 17
+          DisabledBorder = False
+          Style = csDropDownList
+          EmptyTextStyle = []
+          DropWidth = 0
+          Enabled = True
+          ItemIndex = -1
+          Items.Strings = (
+            'None'
+            'Uuid38'
+            'Uuid36'
+            'Uuid32')
+          LabelCaption = 'String Id Generator:'
+          LabelPosition = lpTopLeft
+          LabelAlwaysEnabled = True
+          LabelFont.Charset = DEFAULT_CHARSET
+          LabelFont.Color = clWindowText
+          LabelFont.Height = -11
+          LabelFont.Name = 'Tahoma'
+          LabelFont.Style = []
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 9
+          OnChange = SaveProperty
+        end
       end
       object edMainUnitName: TAdvEdit
         Left = 79

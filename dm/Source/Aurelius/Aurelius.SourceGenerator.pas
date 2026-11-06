@@ -89,6 +89,8 @@ type
     function BuildAssociationName(ARelationship: TGDAORelationship; ANameSource: TAssociationNameSource;
       AFormat: string; ASingularize: boolean; ACamelCase: boolean; ARemoveUnderline: boolean): string;
     function RetrieveIdInfo(ATable: TGDAOTable): TEntityIdInfo;
+    function DefaultGuidIdGenerator: TIdGenerator;
+    function DefaultStringIdGenerator: TIdGenerator;
     procedure ErrorFmt(Msg: string; const Args: array of const);
     procedure BuildInheritanceMap;
     function IsBlob(AType: string): boolean;
@@ -699,6 +701,7 @@ begin
   case AIdInfo.Generator of
     TIdGenerator.IdentityOrSequence: generatorStr := 'TIdGenerator.IdentityOrSequence';
     TIdGenerator.Guid: generatorStr := 'TIdGenerator.Guid';
+    TIdGenerator.SmartGuid: generatorStr := 'TIdGenerator.SmartGuid';
     TIdGenerator.Uuid38: generatorStr := 'TIdGenerator.Uuid38';
     TIdGenerator.Uuid36: generatorStr := 'TIdGenerator.Uuid36';
     TIdGenerator.Uuid32: generatorStr := 'TIdGenerator.Uuid32';
@@ -820,6 +823,27 @@ begin
   end;
 end;
 
+function TSourceGenerator.DefaultGuidIdGenerator: TIdGenerator;
+begin
+  case FOptions.DefaultGuidIdGenerator of
+    dgSmartGuid: Result := TIdGenerator.SmartGuid;
+    dgNone: Result := TIdGenerator.None;
+  else
+    Result := TIdGenerator.Guid;
+  end;
+end;
+
+function TSourceGenerator.DefaultStringIdGenerator: TIdGenerator;
+begin
+  case FOptions.DefaultStringIdGenerator of
+    dsUuid38: Result := TIdGenerator.Uuid38;
+    dsUuid36: Result := TIdGenerator.Uuid36;
+    dsUuid32: Result := TIdGenerator.Uuid32;
+  else
+    Result := TIdGenerator.None;
+  end;
+end;
+
 function TSourceGenerator.RetrieveIdInfo(ATable: TGDAOTable): TEntityIdInfo;
 
   function FindBestRelationship(Rels: TRelationshipList): TGDAORelationship;
@@ -913,14 +937,20 @@ begin
                 else
                   Result.Generator := TIdGenerator.None;
               end;
-            naString, naBoolean, naDateTime:
+            naString:
+              // an Id that is also a foreign key (association) gets its value from the parent
+              if UsedRels.Count = 0 then
+                Result.Generator := DefaultStringIdGenerator
+              else
+                Result.Generator := TIdGenerator.None;
+            naBoolean, naDateTime:
               Result.Generator := TIdGenerator.None;
 
       //      naUnknown:
       //      naMemo: ;
             naBlob:
               if field.DataType.NativeSubType = stGuid then
-                Result.Generator := TIdGenerator.Guid
+                Result.Generator := DefaultGuidIdGenerator
               else
                 ErrorFmt('Cannot retrieve Id for table "%s". Unsupported data type for Id field "%s"',
                   [ATable.TableName, field.FieldName]);
@@ -959,7 +989,7 @@ begin
         begin
           SetLength(Result.MemberNames, 1);
           Result.MemberNames[0] := 'F' + PropertyName(field);
-          Result.Generator := TIdGenerator.Guid;
+          Result.Generator := DefaultGuidIdGenerator;
           Exit(Result);
         end;
       end;
