@@ -568,6 +568,9 @@ object fmProject: TfmProject
     object DuplicateTable1: TMenuItem
       Action = acTable_Duplicate
     end
+    object ResyncFromDatabase1: TMenuItem
+      Action = acTable_Resync
+    end
   end
   object ActionList1: TActionList
     Images = imgObjects
@@ -584,6 +587,13 @@ object fmProject: TfmProject
       Caption = 'Duplicate Table...'
       OnExecute = acTable_DuplicateExecute
       OnUpdate = acTable_DuplicateUpdate
+    end
+    object acTable_Resync: TAction
+      Category = 'Table'
+      Caption = 'Resync from Database...'
+      Hint = 'Resync this table or view from the database'
+      OnExecute = acTable_ResyncExecute
+      OnUpdate = acTable_ResyncUpdate
     end
     object acRenameTreeItem: TAction
       Caption = 'Rename'

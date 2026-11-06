@@ -441,6 +441,13 @@ object dmDiagramOptions: TdmDiagramOptions
       OnExecute = acDiagram_Duplicate_PopupExecute
       OnUpdate = acDiagram_Duplicate_PopupUpdate
     end
+    object acDiagram_Resync_Popup: TAction
+      Category = 'Diagram'
+      Caption = 'Resync from Database...'
+      Hint = 'Resync selected table from the database'
+      OnExecute = acDiagram_Resync_PopupExecute
+      OnUpdate = acDiagram_Resync_PopupUpdate
+    end
     object acDiagram_Duplicate: TAction
       Category = 'Diagram'
       Caption = 'Duplicate Table'
@@ -669,6 +676,9 @@ object dmDiagramOptions: TdmDiagramOptions
     end
     object DuplicateTable1: TMenuItem
       Action = acDiagram_Duplicate_Popup
+    end
+    object ResyncFromDatabase1: TMenuItem
+      Action = acDiagram_Resync_Popup
     end
     object miTableSeparator: TMenuItem
       Action = acDiagram_TableSeparator

@@ -26,6 +26,10 @@ type
     FProg: TatProgress;
     function ProgCount: integer;
     {$ENDIF}
+    {Resync-aware comparisons (FFilter.ResyncMode); outside resync they are the plain '<>'}
+    function CommentDiffers(const AOld, ANew: string): boolean;
+    function TypeNameDiffers(const AOld, ANew: string): boolean;
+    function SourceTextDiffers(const AOld, ANew: string): boolean;
     procedure ActionChangeIndex(AIndex, OldIndex: TGDAOIndex);
     procedure ActionChangeDomain(ADomain, OldDomain: TGDAODomain);
     procedure ActionChangeRelationship(ARelationship, OldRelationship: TGDAORelationship);
@@ -315,7 +319,9 @@ begin
          { new relationships }
          CheckNewRelationships;
 
-         if NewDB.DatabaseType.RelationshipsInTablesOnly then
+         // resync applies to the model, where a created table does not bring its
+         // relationships: the relationship actions are needed there
+         if NewDB.DatabaseType.RelationshipsInTablesOnly and not FFilter.ResyncMode then
            RemoveRedundantRelationshipActions;
       end;
       {$IFDEF DATAMODELER}
@@ -358,6 +364,63 @@ begin
    end;
 end;
 
+function TDBCompare.CommentDiffers(const AOld, ANew: string): boolean;
+begin
+  // Several retrievers (PostgreSQL, SQLite, AbsoluteDB, Oracle before) do not read comments:
+  // an empty database comment must not blank the model description on resync
+  if FFilter.ResyncMode and (Trim(ANew) = '') then
+    Result := False
+  else
+    Result := AOld <> ANew;
+end;
+
+function TDBCompare.TypeNameDiffers(const AOld, ANew: string): boolean;
+begin
+  // Retrievers return the catalog spelling of type names (e.g. VARCHAR2 vs Varchar2)
+  if FFilter.ResyncMode then
+    Result := not SameText(Trim(AOld), Trim(ANew))
+  else
+    Result := AOld <> ANew;
+end;
+
+function TDBCompare.SourceTextDiffers(const AOld, ANew: string): boolean;
+
+  function Normalize(const S: string): string;
+  var
+    c: Char;
+    lastWasSpace: boolean;
+    sb: TStringBuilder;
+  begin
+    // collapse every run of blanks/line breaks into one space, ignore case
+    sb := TStringBuilder.Create;
+    try
+      lastWasSpace := False;
+      for c in Trim(S) do
+        if CharInSet(c, [' ', #9, #10, #13]) then
+        begin
+          if not lastWasSpace then
+            sb.Append(' ');
+          lastWasSpace := True;
+        end
+        else
+        begin
+          sb.Append(c);
+          lastWasSpace := False;
+        end;
+      Result := AnsiUpperCase(sb.ToString);
+    finally
+      sb.Free;
+    end;
+  end;
+
+begin
+  // The database returns view/procedure source rebuilt from its catalog: layout differs
+  if FFilter.ResyncMode then
+    Result := Normalize(AOld) <> Normalize(ANew)
+  else
+    Result := not SameText(Trim(AOld), Trim(ANew));
+end;
+
 procedure TDBCompare.CompareDomains(OldDomain, NewDomain: TGDAODomain);
 var
   AModified: boolean;
@@ -370,7 +433,7 @@ begin
     AModified := true;
 
   { field type }
-  if OldDomain.DataTypeName <> NewDomain.DataTypeName then
+  if TypeNameDiffers(OldDomain.DataTypeName, NewDomain.DataTypeName) then
     AModified := true;
 
   if (OldDomain.Size <> NewDomain.Size) or (OldDomain.Size2 <> NewDomain.Size2) then
@@ -392,7 +455,7 @@ begin
   if AModified then
     ActionChangeDomain(NewDomain, OldDomain);
 
-  if FFilter.MustIncludeComments and FFilter.MustInclude(NewDomain) and (OldDomain.Information <> NewDomain.Information) then
+  if FFilter.MustIncludeComments and FFilter.MustInclude(NewDomain) and CommentDiffers(OldDomain.Information, NewDomain.Information) then
     TatCommentDomainAction.Create(FActionList).Domain := NewDomain;
 end;
 
@@ -435,7 +498,7 @@ begin
     ((OldField.Expression <> NewField.Expression) and NewField.DataType.Computed) then
     AChangeTypeDropping := true
   else
-  if (OldField.DataTypeName <> NewField.DataTypeName) then
+  if TypeNameDiffers(OldField.DataTypeName, NewField.DataTypeName) then
     AChangeType := true
   else if OldField.Size <> NewField.Size then
     AChangeSize := true;
@@ -478,8 +541,13 @@ begin
       ActionCreateConstraintFieldCheck(NewField);
   end;
 
-  if FFilter.MustIncludeComments and FFilter.MustInclude(NewField) and (OldField.Description <> NewField.Description) then
+  if FFilter.MustIncludeComments and FFilter.MustInclude(NewField) and CommentDiffers(OldField.Description, NewField.Description) then
     TatCommentFieldAction.Create(FActionList).Field := NewField;
+
+  // resync: SQL Server imports column comments (MS_Description) as field captions
+  if FFilter.ResyncMode and FFilter.MustIncludeComments and FFilter.MustInclude(NewField)
+    and CommentDiffers(OldField.FieldCaption, NewField.FieldCaption) then
+    TatCaptionFieldAction.Create(FActionList).Field := NewField;
 end;
 
 procedure TDBCompare.CompareTables(OldTable, NewTable: TGDAOTable);
@@ -548,7 +616,7 @@ begin
           ActionCreateField(NewTable.Fields[i]);
     end;
 
-    if FFilter.MustIncludeComments and FFilter.MustInclude(NewTable) and (OldTable.Description <> NewTable.Description) then
+    if FFilter.MustIncludeComments and FFilter.MustInclude(NewTable) and CommentDiffers(OldTable.Description, NewTable.Description) then
       TatCommentTableAction.Create(FActionList).Table := NewTable;
 
     { check other table objects}
@@ -691,6 +759,7 @@ procedure TDBCompare.CheckNewRelationships;
 var
   iRel: integer;
   s: string;
+  oldRel: TGDAORelationship;
 begin
   CheckProgressMessage('Checking new relationships');
   for iRel:=0 to NewDB.Relationships.Count-1 do
@@ -698,11 +767,23 @@ begin
     CheckProgressCanceled;
     if (NewDB.Relationships[iRel].ParentTable <> nil) and (NewDB.Relationships[iRel].ChildTable <> nil) then
     begin
-      s := NewDB.Relationships[iRel].RelationshipName;
-      if OldDB.Relationships.IndexOf(s) < 0 then
-        ActionCreateRelationship(NewDB.Relationships[iRel]) // new relationship
-      else // compare relationships
-        CompareRelationships(OldDB.RelationshipByName(s), NewDB.Relationships[iRel]);
+      if FFilter.ResyncMode then
+      begin
+        // resync: name + child table (duplicate names in PostgreSQL, unnamed foreign keys in SQLite)
+        oldRel := MatchRelationship(OldDB, NewDB.Relationships[iRel]);
+        if oldRel = nil then
+          ActionCreateRelationship(NewDB.Relationships[iRel])
+        else
+          CompareRelationships(oldRel, NewDB.Relationships[iRel]);
+      end
+      else
+      begin
+        s := NewDB.Relationships[iRel].RelationshipName;
+        if OldDB.Relationships.IndexOf(s) < 0 then
+          ActionCreateRelationship(NewDB.Relationships[iRel]) // new relationship
+        else // compare relationships
+          CompareRelationships(OldDB.RelationshipByName(s), NewDB.Relationships[iRel]);
+      end;
     end;
     CheckProgressStep;
   end;
@@ -732,6 +813,12 @@ begin
   for iRel:=0 to OldDB.Relationships.Count-1 do
   begin
     CheckProgressCanceled;
+    if FFilter.ResyncMode then
+    begin
+      if MatchRelationship(NewDB, OldDB.Relationships[iRel]) = nil then
+        ActionRemoveRelationship(OldDB.Relationships[iRel]);
+    end
+    else
     if NewDB.Relationships.IndexOf(OldDB.Relationships[iRel].RelationshipName) < 0 then
       ActionRemoveRelationship(OldDB.Relationships[iRel]); // removed relationship
     CheckProgressStep;
@@ -832,7 +919,7 @@ begin
         ActionChangeTrigger(AActualTrigger, APreviousTrigger);
 
       if FFilter.MustIncludeComments and FFilter.MustInclude(AActualTrigger) and
-        (APreviousTrigger.Description <> AActualTrigger.Description)
+        CommentDiffers(APreviousTrigger.Description, AActualTrigger.Description)
       then
         TatCommentTriggerAction.Create(FActionList).Trigger := AActualTrigger;
     end;
@@ -859,17 +946,18 @@ begin
         if idx >= 0 then
         begin
           // compare objects
-          if not (
-            SameText(Trim(OldDB.Categories.Items[i].Objects.Items[j].CreateImplementation),
-              Trim(cat.Objects.Items[idx].CreateImplementation))
-            and
-            SameText(OldDB.Categories.Items[i].Objects.Items[j].CustomProps.Text,
+          // on resync, properties the retriever does not read (e.g. Firebird/Oracle sequence seed) are ignored
+          if SourceTextDiffers(OldDB.Categories.Items[i].Objects.Items[j].CreateImplementation,
+              cat.Objects.Items[idx].CreateImplementation)
+            or
+            (not SameText(OldDB.Categories.Items[i].Objects.Items[j].CustomProps.Text,
               cat.Objects.Items[idx].CustomProps.Text)
-             ) then
+             and not (FFilter.ResyncMode and (Trim(cat.Objects.Items[idx].CustomProps.Text) = '')))
+          then
             ActionChangeExtraObject(cat.Objects.Items[idx], OldDB.Categories.Items[i].Objects.Items[j]);
 
            if FFilter.MustIncludeComments and FFilter.MustInclude(cat.Objects.Items[idx])
-             and (cat.Objects.Items[idx].Description <> OldDB.Categories.Items[i].Objects.Items[j].Description)
+             and CommentDiffers(OldDB.Categories.Items[i].Objects.Items[j].Description, cat.Objects.Items[idx].Description)
            then
              TatCommentExtraObjectAction.Create(FActionList).ExtraObject := cat.Objects.Items[idx];
         end
@@ -1289,7 +1377,9 @@ begin
       if slNew.Count = 0 then
         ActionRemovePrimaryKey(AOldTable)
       else
-      if (slOld.Text <> slNew.Text) or not SameText(AOldTable.PrimaryKeyIndex.IndexName, ANewTable.PrimaryKeyIndex.IndexName) then
+      // resync: the database often names primary keys itself (Firebird INTEG_n, Oracle SYS_Cn): fields only
+      if (slOld.Text <> slNew.Text)
+        or (not FFilter.ResyncMode and not SameText(AOldTable.PrimaryKeyIndex.IndexName, ANewTable.PrimaryKeyIndex.IndexName)) then
         ActionChangePrimaryKey(ANewTable, AOldTable);
     end;
   finally

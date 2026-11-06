@@ -38,6 +38,7 @@ type
     acProjectDomains: TAction;
     acProjectCheck: TAction;
     acProjectMerge: TAction;
+    acProjectResync: TAction;
     acProjectVersionsManage: TAction;
     acProjectVersionsCompare: TAction;
     acProjectConvert: TAction;
@@ -80,6 +81,7 @@ type
     procedure acProjectDomainsExecute(Sender: TObject);
     procedure acProjectGenerateExecute(Sender: TObject);
     procedure acProjectMergeExecute(Sender: TObject);
+    procedure acProjectResyncExecute(Sender: TObject);
     procedure acProjectNewRelationshipExecute(Sender: TObject);
     procedure acProjectNewTableExecute(Sender: TObject);
     procedure acProjectSettingsExecute(Sender: TObject);
@@ -387,6 +389,12 @@ procedure TdmMainActions.acProjectGenerateExecute(Sender: TObject);
 begin
   if Assigned(CurrentProject) then
     CurrentProject.ShowGenerateScriptDialog;
+end;
+
+procedure TdmMainActions.acProjectResyncExecute(Sender: TObject);
+begin
+  if Assigned(CurrentProject) then
+    CurrentProject.ResyncFromDatabase;
 end;
 
 procedure TdmMainActions.acProjectMergeExecute(Sender: TObject);

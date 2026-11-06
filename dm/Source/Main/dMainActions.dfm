@@ -256,6 +256,13 @@ object dmMainActions: TdmMainActions
       OnExecute = acProjectMergeExecute
       OnUpdate = ActionProjectAssignedUpdate
     end
+    object acProjectResync: TAction
+      Category = 'Project'
+      Caption = 'Resync from Database...'
+      Hint = 'Resync the project structure from its database'
+      OnExecute = acProjectResyncExecute
+      OnUpdate = ActionProjectAssignedUpdate
+    end
     object acProjectVersionsManage: TAction
       Category = 'Project'
       Caption = 'Manage versions...'

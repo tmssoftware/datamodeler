@@ -2612,6 +2612,8 @@ object fmMenu: TfmMenu
       end
       object Merge1: TMenuItem
       end
+      object ResyncFromDatabase1: TMenuItem
+      end
       object N6: TMenuItem
         Caption = '-'
       end

@@ -64,6 +64,7 @@ type
     mnNewObjects: TMenuItem;
     Domains1: TMenuItem;
     Merge1: TMenuItem;
+    ResyncFromDatabase1: TMenuItem;
     Manageversions1: TMenuItem;
     Compareversions1: TMenuItem;
     Converttoanotherdatabase1: TMenuItem;
@@ -295,6 +296,7 @@ begin
   miNewCategory10.Action := FActions.acNewCategory10;
   Domains1.Action := FActions.acProjectDomains;
   Merge1.Action := FActions.acProjectMerge;
+  ResyncFromDatabase1.Action := FActions.acProjectResync;
   Manageversions1.Action := FActions.acProjectVersionsManage;
   Compareversions1.Action := FActions.acProjectVersionsCompare;
   Converttoanotherdatabase1.Action := FActions.acProjectConvert;

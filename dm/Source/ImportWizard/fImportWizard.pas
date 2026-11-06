@@ -396,6 +396,10 @@ begin
 
         // clear existing diagrams
         FMetaData.DiagramObj.Diagrams.Clear;
+
+        // remember the connection for "Resync from database" (new connections: when saved)
+        if rExisting.Checked then
+          FMetaData.UserOptions.Values[SResyncConnectionOption] := cbConnection.Items[cbConnection.ItemIndex];
         FImportOk := true;
       finally
         DBConnection.Free;
@@ -474,6 +478,10 @@ begin
       ConnDBType := FConfigFrame.CurrentDBType;
     end;
     SystemConfig.SaveUserConnectionsFile;
+
+    // project imported through this new connection: remember it for "Resync from database"
+    if FImportOk and Assigned(FMetadata) then
+      FMetadata.UserOptions.Values[SResyncConnectionOption] := FSaveFrame.edName.Text;
   finally
     s.Free;
   end;

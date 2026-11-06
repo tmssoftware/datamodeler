@@ -65,7 +65,9 @@ type
     acDiagram_Find: TAction;
     acDiagram_Duplicate: TAction;
     acDiagram_Duplicate_Popup: TAction;
+    acDiagram_Resync_Popup: TAction;
     DuplicateTable1: TMenuItem;
+    ResyncFromDatabase1: TMenuItem;
     acDiagram_Navigator: TAction;
     acDiagram_ZoomTo100: TAction;
     acDiagram_ZoomToFit: TAction;
@@ -114,6 +116,8 @@ type
     procedure acDiagram_DuplicateExecute(Sender: TObject);
     procedure acDiagram_Duplicate_PopupUpdate(Sender: TObject);
     procedure acDiagram_Duplicate_PopupExecute(Sender: TObject);
+    procedure acDiagram_Resync_PopupUpdate(Sender: TObject);
+    procedure acDiagram_Resync_PopupExecute(Sender: TObject);
     procedure acDiagram_NavigatorUpdate(Sender: TObject);
     procedure acDiagram_NavigatorExecute(Sender: TObject);
     procedure acDiagram_ZoomTo100Update(Sender: TObject);
@@ -227,6 +231,22 @@ begin
 end;
 
 procedure TdmDiagramOptions.acDiagram_Duplicate_PopupUpdate(Sender: TObject);
+begin
+  TAction(Sender).Enabled := (CurrentDiagram <> nil)
+    and (CurrentDiagram.FirstSelectedTable <> nil)
+    and (CurrentDiagram.SelectedBlockCount = 1)
+    and (CurrentProject <> nil);
+  TAction(Sender).Visible := TAction(Sender).Enabled;
+end;
+
+procedure TdmDiagramOptions.acDiagram_Resync_PopupExecute(Sender: TObject);
+begin
+  if (CurrentDiagram <> nil) and (CurrentDiagram.FirstSelectedTable <> nil) and
+    (CurrentProject <> nil) then
+    CurrentProject.ResyncFromDatabase(CurrentDiagram.FirstSelectedTable.Table);
+end;
+
+procedure TdmDiagramOptions.acDiagram_Resync_PopupUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := (CurrentDiagram <> nil)
     and (CurrentDiagram.FirstSelectedTable <> nil)

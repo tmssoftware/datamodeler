@@ -57,6 +57,7 @@ type
     btQuickOpen: TAdvGlowButton;
     btQuickNew: TAdvGlowButton;
     btProjectMerge: TAdvGlowButton;
+    btProjectResync: TAdvGlowButton;
     AdvToolBar8: TAdvToolBar;
     btProjectConvert: TAdvGlowButton;
     btProjectSettings: TAdvGlowButton;
@@ -368,6 +369,7 @@ begin
   AssignButtonAction(btProjectDomains, FActions.acProjectDomains);
   AssignButtonAction(btProjectConvert, FActions.acProjectConvert);
   AssignButtonAction(btProjectMerge, FActions.acProjectMerge);
+  AssignButtonAction(btProjectResync, FActions.acProjectResync);
   AssignButtonAction(btProjectSettings, FActions.acProjectSettings);
   AssignButtonAction(btScripting, FActions.acScripting);
 

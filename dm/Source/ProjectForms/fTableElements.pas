@@ -241,6 +241,9 @@ type
     FSelectedTable           : TGDAOTable;
     FOnLinkClick             : TDesignLinkClickEvent;
     FOnUpdateTableName       : TGDAOTableEvent;
+    { BeginExternalChanges/EndExternalChanges }
+    FExternalChanges         : integer;
+    FExternalFieldName       : string;
 
     function ProjectFormHandle: HWND;
     function SelectedField: TGDAOField;
@@ -284,6 +287,13 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure InitiateAction; override;
     procedure RefreshFullFrameInformation;
+    {Fields, indexes, constraints and triggers of the table may be freed outside the
+     frame until EndExternalChanges (resync applying database changes): refreshes are
+     ignored and the field grid does not read its fields meanwhile}
+    procedure BeginExternalChanges;
+    {Ends BeginExternalChanges: reloads the frame from the table without reading the
+     objects listed before, keeping the selected field when it still exists}
+    procedure EndExternalChanges;
     procedure ShowLink(ALinkType: TDesignLinkType; AObject: TObject);
     procedure InitVisualElements;
     procedure ShowTableElement(AElement: TObject);
@@ -1834,6 +1844,9 @@ end;
 procedure TfmTableElements.gCamposGetCellColor(Sender: TObject; ARow,
   ACol: Integer; AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
 begin
+  // the grid may reference freed fields (see BeginExternalChanges)
+  if FExternalChanges > 0 then
+    Exit;
   if FieldFromGrid(ARow) <> nil then
   begin
     if FieldFromGrid(ARow).Required then
@@ -1919,7 +1932,8 @@ procedure TfmTableElements.RefreshFullFrameInformation;
 var
   c: integer;
 begin
-  if not (csDestroying in ComponentState) then
+  // during external changes the lists may reference freed objects: EndExternalChanges reloads
+  if not (csDestroying in ComponentState) and (FExternalChanges = 0) then
   begin
     FIsNewObject := false;
     LoadPredefinedTypes;
@@ -1941,6 +1955,55 @@ begin
 
     ShowDatabaseFeatures;
   end;
+end;
+
+procedure TfmTableElements.BeginExternalChanges;
+begin
+  if FExternalChanges = 0 then
+  begin
+    // the objects are still valid here: remember the selected field by name
+    if SelectedField <> nil then
+      FExternalFieldName := SelectedField.FieldName
+    else
+      FExternalFieldName := '';
+  end;
+  Inc(FExternalChanges);
+end;
+
+procedure TfmTableElements.EndExternalChanges;
+var
+  r: integer;
+  field: TGDAOField;
+begin
+  if FExternalChanges = 0 then
+    Exit;
+  Dec(FExternalChanges);
+  if (FExternalChanges > 0) or (csDestroying in ComponentState) then
+    Exit;
+
+  // drop the references to objects that may have been freed, without reading them:
+  // LoadTableFieldGrid and the field controls read the selected field from the grid
+  for r := 0 to gCampos.RowCount - 1 do
+    gCampos.Objects[0, r] := nil;
+  FIndexListChanging := true;
+  try
+    lvIndices.Items.Clear;
+  finally
+    FIndexListChanging := false;
+  end;
+  FConstraintListChanging := true;
+  try
+    lvConstraints.Items.Clear;
+  finally
+    FConstraintListChanging := false;
+  end;
+  LoadDomainCombo;
+
+  field := nil;
+  if (FSelectedTable <> nil) and (FExternalFieldName <> '') then
+    field := FSelectedTable.Fields.FindbyName(FExternalFieldName);
+  LoadTableFieldGrid(field);
+  RefreshFullFrameInformation;
 end;
 
 procedure TfmTableElements.OnTableNameChanged(var Msg: TMessage);

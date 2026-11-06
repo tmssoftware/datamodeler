@@ -21,7 +21,12 @@ type
 
   TExecuteSQLEvent = procedure(ASQL: string) of object;
 
-  TatDBActionList = class(TObjectList);
+  TatDBActionList = class(TObjectList)
+  public
+    {Removes (and frees, when the list owns its objects) the actions that cannot be
+    applied to a dictionary, e.g. rename actions}
+    procedure RemoveNotApplicable;
+  end;
 
   TSQLScriptFilterItem = (
     fiNone,
@@ -132,6 +137,8 @@ type
   public
     constructor Create(AList: TatDBActionList);
     procedure ApplyDBAction(ADictionary: TGDAODatabase); virtual;
+    {True when the action class overrides ApplyDBAction}
+    function CanApplyDBAction: boolean;
   published
     property Description: string read GetDescription;
     property Category: TCategoryAction read GetCategory;
@@ -143,6 +150,7 @@ type
     FItems: TSQLScriptFilterItems;
     FExcludedTables: TStrings;
     FCategories: TGDAOCategoryTypes;
+    FResyncMode: boolean;
 
     {IsTableIncluded is different than MustInclude(Table). This function
     only checks for the excluded tables list, and ignores if the filter items
@@ -168,6 +176,10 @@ type
     property Items: TSQLScriptFilterItems read FItems write FItems;
     property Categories: TGDAOCategoryTypes read FCategories write FCategories;
     property ExcludedTables: TStrings read FExcludedTables;
+    {Resync (model <- live database): tolerate what retrievers do not read back exactly.
+    Comments missing on the database side are ignored, primary keys compare by fields
+    (not by system-generated names), type names and object source text compare loosely}
+    property ResyncMode: boolean read FResyncMode write FResyncMode;
   end;
 
   {$IFNDEF DATAMODELER}
@@ -405,6 +417,25 @@ begin
 
 end;
 
+function TatDBAction.CanApplyDBAction: boolean;
+var
+  apply: procedure(ADictionary: TGDAODatabase) of object;
+begin
+  apply := ApplyDBAction;
+  result := TMethod(apply).Code <> @TatDBAction.ApplyDBAction;
+end;
+
+{ TatDBActionList }
+
+procedure TatDBActionList.RemoveNotApplicable;
+var
+  i: integer;
+begin
+  for i := Count - 1 downto 0 do
+    if not TatDBAction(Items[i]).CanApplyDBAction then
+      Delete(i);
+end;
+
 constructor TatDBAction.Create(AList: TatDBActionList);
 begin
   if AList <> nil then
@@ -431,6 +462,7 @@ begin
   begin
     FItems := TSQLScriptFilter(ASource).FItems;
     FCategories := TSQLScriptFilter(ASource).FCategories;
+    FResyncMode := TSQLScriptFilter(ASource).FResyncMode;
     FExcludedTables.Assign(TSQLScriptFilter(ASource).FExcludedTables);
   end else
     inherited Assign(ASource);
