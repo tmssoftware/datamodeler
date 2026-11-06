@@ -592,6 +592,17 @@ procedure TMySQLDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase);
 begin
 //  DefineDatabase;
 
+  {$IFNDEF AURELIUS_DLL}
+  // Without a DATABASE parameter the import is filtered on DATABASE(), which is NULL when the
+  // connection has no current database: fail with a clear message instead of importing nothing.
+  if FDatabase = '' then
+  begin
+    Module.Open('SELECT DATABASE() AS CURRENT_DB');
+    if Module.FieldAsString('CURRENT_DB') = '' then
+      raise EGUIException.Create('No database selected. Choose a database in the connection settings.');
+  end;
+  {$ENDIF}
+
   SetMaxProgress(1000);
   SetProgressPos(0);
 
