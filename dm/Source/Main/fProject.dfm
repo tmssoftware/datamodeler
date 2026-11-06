@@ -547,6 +547,15 @@ object fmProject: TfmProject
     object Rename1: TMenuItem
       Action = acRenameTreeItem
     end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object miSelectAllTreeItems: TMenuItem
+      Action = acSelectAllTreeItems
+    end
+    object miUnselectAllTreeItems: TMenuItem
+      Action = acUnselectAllTreeItems
+    end
     object N3: TMenuItem
       Caption = '-'
     end
@@ -581,6 +590,16 @@ object fmProject: TfmProject
       OnExecute = acRenameTreeItemExecute
       OnUpdate = acRenameTreeItemUpdate
     end
+    object acSelectAllTreeItems: TAction
+      Caption = 'Select All'
+      OnExecute = acSelectAllTreeItemsExecute
+      OnUpdate = acSelectAllTreeItemsUpdate
+    end
+    object acUnselectAllTreeItems: TAction
+      Caption = 'Unselect All'
+      OnExecute = acUnselectAllTreeItemsExecute
+      OnUpdate = acUnselectAllTreeItemsUpdate
+    end
     object acTable_AddDiagram: TAction
       Category = 'Table'
       Caption = 'Add selected table do diagram'
@@ -609,6 +628,7 @@ object fmProject: TfmProject
     end
     object acDeleteTreeItem: TAction
       Caption = 'Delete'
+      ShortCut = 16430
       OnExecute = acDeleteTreeItemExecute
       OnUpdate = acDeleteTreeItemUpdate
     end

@@ -63,6 +63,11 @@ type
     Addobject1: TMenuItem;
     acTable_Duplicate: TAction;
     DuplicateTable1: TMenuItem;
+    acSelectAllTreeItems: TAction;
+    acUnselectAllTreeItems: TAction;
+    N4: TMenuItem;
+    miSelectAllTreeItems: TMenuItem;
+    miUnselectAllTreeItems: TMenuItem;
     Panel1: TPanel;
     pnTree: TAdvNavBar;
     NavigatorPanel: TPanel;
@@ -107,6 +112,10 @@ type
     procedure acTable_FindInDiagramUpdate(Sender: TObject);
     procedure acTable_DuplicateUpdate(Sender: TObject);
     procedure acTable_DuplicateExecute(Sender: TObject);
+    procedure acSelectAllTreeItemsExecute(Sender: TObject);
+    procedure acSelectAllTreeItemsUpdate(Sender: TObject);
+    procedure acUnselectAllTreeItemsExecute(Sender: TObject);
+    procedure acUnselectAllTreeItemsUpdate(Sender: TObject);
   private
     FElementarPanel: array[TTreeElementarNodes] of TAdvNavBarPanel;
     FElementarTree: array[TTreeElementarNodes] of TTreeView;
@@ -195,7 +204,22 @@ type
 
     function FindElementTreeView(AElement: TObject): TTreeView;
     function FocusedTreeView: TTreeView;
-    function CreatePanelTreeView(APanel: TAdvNavBarPanel): TTreeView;
+    function CreatePanelTreeView(APanel: TAdvNavBarPanel; const AFilterText: string): TTreeView;
+
+    {Filter box above each explorer panel tree}
+    function TreeFilterEdit(ATree: TTreeView): TEdit;
+    function TreeFilterMatch(ATree: TTreeView; const AName: string): boolean;
+    procedure RefreshFilteredTree(ATree: TTreeView);
+    procedure PanelFilterChange(Sender: TObject);
+    procedure PanelFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
+    {Multi-selection in the explorer panel trees}
+    procedure GetSelectedElements(ATree: TTreeView; AList: TList);
+    procedure SelectTreeElements(ATree: TTreeView; AList: TList);
+    function NextUnselectedElement(ATree: TTreeView): TObject;
+    function ElementName(AElement: TObject): string;
+    function ElementReadOnly(AElement: TObject): boolean;
+    procedure OpenSelectedElements(ATree: TTreeView);
 
     procedure DeleteSelectedDiagramObjects;
     procedure DeleteSelectedElement;
@@ -262,7 +286,7 @@ implementation
 
 uses
   CommCtrl, uDBProperties, fNewRelation, fRelationshipDialog, fDuplicateTable,
-  fSequenceEditor, TaskDialog, UAppRegistry,
+  fSequenceEditor, TaskDialog, UAppRegistry, StrUtils,
   Aurelius.ExportForm;
 
 const
@@ -433,7 +457,7 @@ begin
   FMustShowNavigator := DMRegistry.ShowNavigator;
 end;
 
-function TfmProject.CreatePanelTreeView(APanel: TAdvNavBarPanel): TTreeView;
+function TfmProject.CreatePanelTreeView(APanel: TAdvNavBarPanel; const AFilterText: string): TTreeView;
 begin
   result := TTreeView.Create(APanel);
   result.Name := 'tv' + APanel.Caption;
@@ -445,6 +469,8 @@ begin
   result.ShowRoot := false;
   result.RowSelect := true;
   result.HotTrack := true;
+  result.MultiSelect := true;
+  result.MultiSelectStyle := [msControlSelect, msShiftSelect];
   result.Images := imgObjects;
   //result.DragMode := dmAutomatic;
 
@@ -462,92 +488,351 @@ begin
 
   {Increase tree view item height}
   SendMessage(result.Handle, TVM_SETITEMHEIGHT, 24, 0);
+
+  {Filter box on top of the tree. Created after the tree, so the tree stays
+   Controls[0] of the panel (FocusedTreeView relies on that)}
+  with TEdit.Create(APanel) do
+  begin
+    Parent := APanel;
+    Align := alTop;
+    AlignWithMargins := true;
+    Margins.SetBounds(2, 2, 2, 2);
+    TextHint := 'Filter';
+    Text := AFilterText;
+    OnChange := PanelFilterChange;
+    OnKeyDown := PanelFilterKeyDown;
+  end;
+end;
+
+function TfmProject.TreeFilterEdit(ATree: TTreeView): TEdit;
+var
+  i: integer;
+begin
+  result := nil;
+  if (ATree <> nil) and (ATree.Parent <> nil) then
+    for i := 0 to ATree.Parent.ControlCount - 1 do
+      if ATree.Parent.Controls[i] is TEdit then
+      begin
+        result := TEdit(ATree.Parent.Controls[i]);
+        break;
+      end;
+end;
+
+function TfmProject.TreeFilterMatch(ATree: TTreeView; const AName: string): boolean;
+var
+  AEdit: TEdit;
+begin
+  AEdit := TreeFilterEdit(ATree);
+  result := (AEdit = nil) or (Trim(AEdit.Text) = '') or ContainsText(AName, Trim(AEdit.Text));
+end;
+
+procedure TfmProject.RefreshFilteredTree(ATree: TTreeView);
+var
+  i: integer;
+  ASelObj: TObject;
+  AList: TList;
+begin
+  AList := TList.Create;
+  try
+    {Keep the selected items selected if they still match the filter}
+    GetSelectedElements(ATree, AList);
+    for i := AList.Count - 1 downto 0 do
+      if not TreeFilterMatch(ATree, ElementName(TObject(AList[i]))) then
+        AList.Delete(i);
+    ASelObj := nil;
+    if (ATree.Selected <> nil) and (AList.IndexOf(ATree.Selected.Data) >= 0) then
+      ASelObj := TObject(ATree.Selected.Data)
+    else if AList.Count > 0 then
+      ASelObj := TObject(AList[0]);
+
+    if ATree = FElementarTree[elTables] then
+      AddTablesToTreeView(ASelObj)
+    else if ATree = FElementarTree[elRelationships] then
+      AddRelationshipsToTreeView(ASelObj)
+    else if ATree = FElementarTree[elDiagrams] then
+      AddDiagramsToTreeView(ASelObj)
+    else
+      with FMetaData.DataDictionary do
+        for i := 0 to Categories.Count - 1 do
+          if ATree = Categories[i].Data then
+          begin
+            AddObjectsToTreeView(Categories[i], ASelObj);
+            break;
+          end;
+
+    if AList.Count > 1 then
+    begin
+      {The primary selected item first, it stays the focused one}
+      AList.Delete(AList.IndexOf(ASelObj));
+      AList.Insert(0, ASelObj);
+      SelectTreeElements(ATree, AList);
+    end;
+  finally
+    AList.Free;
+  end;
+end;
+
+procedure TfmProject.GetSelectedElements(ATree: TTreeView; AList: TList);
+var
+  i: integer;
+
+  procedure AddNode(ANode: TTreeNode);
+  begin
+    if (integer(ANode.Data) > DATA_OBJECT) and not (TObject(ANode.Data) is TGDAOCategory) and
+      (AList.IndexOf(ANode.Data) < 0) then
+      AList.Add(ANode.Data);
+  end;
+
+begin
+  if ATree = nil then
+    Exit;
+  for i := 0 to integer(ATree.SelectionCount) - 1 do
+    AddNode(ATree.Selections[i]);
+  if (AList.Count = 0) and (ATree.Selected <> nil) then
+    AddNode(ATree.Selected);
+end;
+
+procedure TfmProject.SelectTreeElements(ATree: TTreeView; AList: TList);
+var
+  ANodes: TList;
+  i: integer;
+  ANode: TTreeNode;
+begin
+  {AList holds elements; the first one becomes the primary selected node}
+  ANodes := TList.Create;
+  try
+    for i := 0 to AList.Count - 1 do
+    begin
+      ANode := ATree.Items.GetFirstNode;
+      while (ANode <> nil) and (ANode.Data <> AList[i]) do
+        ANode := ANode.GetNext;
+      if ANode <> nil then
+        ANodes.Add(ANode);
+    end;
+    if ANodes.Count > 0 then
+    begin
+      Inc(FUpdatingSelectedItem);
+      try
+        ATree.Select(ANodes);
+      finally
+        Dec(FUpdatingSelectedItem);
+      end;
+    end;
+  finally
+    ANodes.Free;
+  end;
+end;
+
+function TfmProject.NextUnselectedElement(ATree: TTreeView): TObject;
+var
+  ANode, ABefore, AAfter: TTreeNode;
+  ASeenSelected: boolean;
+begin
+  {The element to select after the selected ones are deleted: the first unselected
+   node after the last selected one, else the last unselected node before them}
+  ABefore := nil;
+  AAfter := nil;
+  ASeenSelected := false;
+  ANode := ATree.Items.GetFirstNode;
+  while ANode <> nil do
+  begin
+    if ANode.Selected then
+    begin
+      ASeenSelected := true;
+      AAfter := nil;
+    end
+    else if not ASeenSelected then
+      ABefore := ANode
+    else if AAfter = nil then
+      AAfter := ANode;
+    ANode := ANode.GetNext;
+  end;
+
+  if AAfter <> nil then
+    result := TObject(AAfter.Data)
+  else if ABefore <> nil then
+    result := TObject(ABefore.Data)
+  else
+    result := nil;
+end;
+
+function TfmProject.ElementName(AElement: TObject): string;
+begin
+  if AElement is TGDAOTable then
+    result := TGDAOTable(AElement).TableName
+  else if AElement is TGDAORelationship then
+    result := TGDAORelationship(AElement).RelationshipName
+  else if AElement is TGDAOObject then
+    result := TGDAOObject(AElement).ObjectName
+  else if AElement is TGDAODiagram then
+    result := TGDAODiagram(AElement).DiagramName
+  else
+    result := '';
+end;
+
+function TfmProject.ElementReadOnly(AElement: TObject): boolean;
+begin
+  if AElement is TGDAOTable then
+    result := TGDAOTable(AElement).ReadOnly
+  else if AElement is TGDAORelationship then
+    result := TGDAORelationship(AElement).ReadOnly
+  else if AElement is TGDAOObject then
+    result := TGDAOObject(AElement).ReadOnly
+  else
+    result := false;
+end;
+
+procedure TfmProject.OpenSelectedElements(ATree: TTreeView);
+var
+  AList: TList;
+  i: integer;
+begin
+  AList := TList.Create;
+  try
+    GetSelectedElements(ATree, AList);
+    for i := 0 to AList.Count - 1 do
+      SelectElement(TObject(AList[i]), true);
+  finally
+    AList.Free;
+  end;
+end;
+
+procedure TfmProject.PanelFilterChange(Sender: TObject);
+var
+  i: integer;
+  AParent: TWinControl;
+begin
+  AParent := TEdit(Sender).Parent;
+  for i := 0 to AParent.ControlCount - 1 do
+    if AParent.Controls[i] is TTreeView then
+    begin
+      RefreshFilteredTree(TTreeView(AParent.Controls[i]));
+      break;
+    end;
+end;
+
+procedure TfmProject.PanelFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  ATree: TTreeView;
+begin
+  case Key of
+    VK_ESCAPE:
+      begin
+        TEdit(Sender).Clear;
+        Key := 0;
+      end;
+    VK_DOWN, VK_RETURN:
+      begin
+        ATree := nil;
+        if (TEdit(Sender).Parent.ControlCount > 0) and (TEdit(Sender).Parent.Controls[0] is TTreeView) then
+          ATree := TTreeView(TEdit(Sender).Parent.Controls[0]);
+        if (ATree <> nil) and (ATree.Items.Count > 0) then
+        begin
+          if ATree.Selected = nil then
+            ATree.Selected := ATree.Items[0];
+          ATree.SetFocus;
+          Key := 0;
+        end;
+      end;
+  end;
 end;
 
 procedure TfmProject.DeleteSelectedElement;
+const
+  MaxListedNames = 10;
 var
+  tv: TTreeView;
+  AList: TList;
   category: TGDAOCategory;
   AObj: TObject;
-  readonly: boolean;
-  selNode: TTreeNode;
   selObj: TObject;
+  i, ReadOnlyCount: integer;
+  AMsg: string;
 begin
-  if (FocusedTreeView <> nil) and (FocusedTreeView.Selected <> nil) then
-  begin
-    selNode := FocusedTreeView.Selected.getNextSibling;
-    if selNode = nil then
-      selNode := FocusedTreeView.Selected.getPrevSibling;
-    if (selNode <> nil) then
-      selObj := TObject(selNode.Data)
-    else
-      selObj := nil;
+  tv := FocusedTreeView;
+  if (tv = nil) or (tv.Selected = nil) then
+    Exit;
 
-    AObj := TObject(FocusedTreeView.Selected.Data);
-    readonly := False;
-    if AObj is TGDAODiagram then
-    begin
-      if DialogMsg(Format(SConfirmItemExclusion, [TGDAODiagram(AObj).DiagramName]),
-        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  AList := TList.Create;
+  try
+    GetSelectedElements(tv, AList);
+
+    {Read only objects cannot be removed from project}
+    ReadOnlyCount := 0;
+    for i := AList.Count - 1 downto 0 do
+      if ElementReadOnly(TObject(AList[i])) then
       begin
-        CloseExplorerPage(FExplorer.FindByElement(TGDAODiagram(AObj)));
-        RemoveNodeReference(AObj);
-        TGDAODiagram(AObj).Free;
-        AddDiagramsToTreeView(selObj);
-        SetModified(nil);
+        AList.Delete(i);
+        Inc(ReadOnlyCount);
       end;
-    end
-    else
-    if AObj is TGDAOObject then
+    if AList.Count = 0 then
     begin
-      readonly := TGDAOObject(AObj).ReadOnly;
-      if not readonly  then
-      begin
-        if DialogMsg(Format(SConfirmItemExclusion, [TGDAOObject(AObj).ObjectName]),
-          mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-        begin
-          CloseElement(TGDAOObject(AObj));
-          category := TGDAOObject(AObj).OwnerCategory;
-          RemoveNodeReference(AObj);
-          TGDAOObject(AObj).Free;
-          AddObjectsToTreeView(category, selObj);
-          SetModified(nil);
-        end
-      end;
-    end
-    else
-    if AObj is TGDAORelationship then
-    begin
-      readonly := TGDAORelationship(AObj).ReadOnly;
-      if not readonly then
-      begin
-        if DialogMsg(Format(SConfirmItemExclusion, [TGDAORelationship(AObj).RelationshipName]),
-          mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-        begin
-          DeleteRelationship(TGDAORelationship(AObj));
-          AddRelationshipsToTreeView(selObj);
-          RefreshOpenedDiagrams;
-        end;
-      end;
-    end
-    else
-    if AObj is TGDAOTable then
-    begin
-      readonly := TGDAOTable(AObj).ReadOnly;
-      if not readonly then
-      begin
-        if DialogMsg(Format(SConfirmItemExclusion, [TGDAOTable(AObj).TableName]),
-          mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-        begin
-          DeleteTable(TGDAOTable(AObj));
-          AddTablesToTreeView(selObj);
-          AddRelationshipsToTreeView;
-          RefreshOpenedDiagrams;
-        end;
-      end;
+      if ReadOnlyCount > 0 then
+        MessageDlg('Selected object is read only and cannot be removed from project.', mtError, [mbOk], 0);
+      Exit;
     end;
 
-    if readonly then
-      MessageDlg('Selected object is read only and cannot be removed from project.', mtError, [mbOk], 0);
+    if AList.Count = 1 then
+      AMsg := Format(SConfirmItemExclusion, [ElementName(TObject(AList[0]))])
+    else
+    begin
+      AMsg := Format('Are you sure you want to delete the %d selected items?', [AList.Count]) + sLineBreak;
+      for i := 0 to AList.Count - 1 do
+        if i < MaxListedNames then
+          AMsg := AMsg + sLineBreak + ElementName(TObject(AList[i]));
+      if AList.Count > MaxListedNames then
+        AMsg := AMsg + sLineBreak + Format('... and %d more', [AList.Count - MaxListedNames]);
+    end;
+    if ReadOnlyCount > 0 then
+      AMsg := AMsg + sLineBreak + sLineBreak +
+        Format('%d read only item(s) will not be removed.', [ReadOnlyCount]);
+
+    if DialogMsg(AMsg, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+      Exit;
+
+    selObj := NextUnselectedElement(tv);
+    category := nil;
+    for i := 0 to AList.Count - 1 do
+    begin
+      AObj := TObject(AList[i]);
+      if AObj is TGDAODiagram then
+      begin
+        CloseExplorerPage(FExplorer.FindByElement(AObj));
+        RemoveNodeReference(AObj);
+        AObj.Free;
+      end
+      else if AObj is TGDAOObject then
+      begin
+        CloseElement(AObj);
+        category := TGDAOObject(AObj).OwnerCategory;
+        RemoveNodeReference(AObj);
+        AObj.Free;
+      end
+      else if AObj is TGDAORelationship then
+        DeleteRelationship(TGDAORelationship(AObj))
+      else if AObj is TGDAOTable then
+        DeleteTable(TGDAOTable(AObj));
+    end;
+    SetModified(nil);
+
+    {Each tree holds one kind of element, so refresh only that tree}
+    if tv = FElementarTree[elDiagrams] then
+      AddDiagramsToTreeView(selObj)
+    else if tv = FElementarTree[elTables] then
+    begin
+      AddTablesToTreeView(selObj);
+      AddRelationshipsToTreeView;
+      RefreshOpenedDiagrams;
+    end
+    else if tv = FElementarTree[elRelationships] then
+    begin
+      AddRelationshipsToTreeView(selObj);
+      RefreshOpenedDiagrams;
+    end
+    else if category <> nil then
+      AddObjectsToTreeView(category, selObj);
+  finally
+    AList.Free;
   end;
 end;
 
@@ -1240,10 +1525,7 @@ end;
 
 procedure TfmProject.acOpenTreeItemExecute(Sender: TObject);
 begin
-  if (FocusedTreeView <> nil) and (FocusedTreeView.Selected <> nil) and (integer(FocusedTreeView.Selected.Data) > DATA_OBJECT) 
-    and not (TObject(FocusedTreeView.Selected.Data) is TGDAOCategory)
-  then
-    SelectElement(TObject(FocusedTreeView.Selected.Data), true);
+  OpenSelectedElements(FocusedTreeView);
 end;
 
 procedure TfmProject.acOpenTreeItemUpdate(Sender: TObject);
@@ -1257,9 +1539,62 @@ begin
   RenameSelectedElement;
 end;
 
+procedure TfmProject.acSelectAllTreeItemsExecute(Sender: TObject);
+var
+  tv: TTreeView;
+  AList: TList;
+  ANode: TTreeNode;
+begin
+  {Selects every item listed in the panel (only the items matching its filter)}
+  tv := FocusedTreeView;
+  if tv = nil then
+    Exit;
+  AList := TList.Create;
+  try
+    {The current item stays the primary selected one}
+    if (tv.Selected <> nil) and (integer(tv.Selected.Data) > DATA_OBJECT) then
+      AList.Add(tv.Selected.Data);
+    ANode := tv.Items.GetFirstNode;
+    while ANode <> nil do
+    begin
+      if (integer(ANode.Data) > DATA_OBJECT) and (AList.IndexOf(ANode.Data) < 0) then
+        AList.Add(ANode.Data);
+      ANode := ANode.GetNext;
+    end;
+    SelectTreeElements(tv, AList);
+  finally
+    AList.Free;
+  end;
+end;
+
+procedure TfmProject.acSelectAllTreeItemsUpdate(Sender: TObject);
+begin
+  acSelectAllTreeItems.Enabled := (FocusedTreeView <> nil) and (FocusedTreeView.Items.Count > 0);
+end;
+
+procedure TfmProject.acUnselectAllTreeItemsExecute(Sender: TObject);
+begin
+  if FocusedTreeView <> nil then
+  begin
+    Inc(FUpdatingSelectedItem);
+    try
+      FocusedTreeView.ClearSelection(false);
+    finally
+      Dec(FUpdatingSelectedItem);
+    end;
+  end;
+end;
+
+procedure TfmProject.acUnselectAllTreeItemsUpdate(Sender: TObject);
+begin
+  acUnselectAllTreeItems.Enabled := (FocusedTreeView <> nil) and
+    ((FocusedTreeView.Selected <> nil) or (FocusedTreeView.SelectionCount > 0));
+end;
+
 procedure TfmProject.acRenameTreeItemUpdate(Sender: TObject);
 begin
-  acRenameTreeItem.Enabled := (FocusedTreeView <> nil) and (FocusedTreeView.Selected <> nil);
+  acRenameTreeItem.Enabled := (FocusedTreeView <> nil) and (FocusedTreeView.Selected <> nil) and
+    (FocusedTreeView.SelectionCount <= 1);
 end;
 
 procedure TfmProject.Addtable1Click(Sender: TObject);
@@ -1280,7 +1615,8 @@ begin
     begin
       tv := FindElementTreeView(FExplorer.Items[idx].Element);
       tn := FindElementTreeNode(FExplorer.Items[idx].Element);
-      if (tv <> nil) and (tn <> nil) then
+      {A node that is already selected is left alone, so a multi-selection is kept}
+      if (tv <> nil) and (tn <> nil) and not tn.Selected then
       begin
         Inc(FUpdatingSelectedItem);
         try
@@ -1493,7 +1829,21 @@ var
   ANewPanel: TAdvNavBarPanel;
   ATree: TTreeView;
   AOldActive: string;
+  AFilters: TStringList;
+  AFilterEdit: TEdit;
 begin
+  {Keep the filter text of each panel, by panel caption}
+  AFilters := TStringList.Create;
+  try
+  AFilters.NameValueSeparator := #1;
+  for i := 0 to pnTree.PanelCount - 1 do
+    if (pnTree.Panels[i].ControlCount > 0) and (pnTree.Panels[i].Controls[0] is TTreeView) then
+    begin
+      AFilterEdit := TreeFilterEdit(TTreeView(pnTree.Panels[i].Controls[0]));
+      if AFilterEdit <> nil then
+        AFilters.Values[pnTree.Panels[i].Caption] := AFilterEdit.Text;
+    end;
+
   FElementarTree[elDictionary] := nil;
   FElementarTree[elTables] := nil;
   FElementarTree[elRelationships] := nil;
@@ -1515,7 +1865,8 @@ begin
     ImageIndex := IMAGEPANEL_DIAGRAMS;
     CaptionHint := ElementarPanelHint(Caption);
   end;
-  FElementarTree[elDiagrams] := CreatePanelTreeView(FElementarPanel[elDiagrams]);
+  FElementarTree[elDiagrams] := CreatePanelTreeView(FElementarPanel[elDiagrams],
+    AFilters.Values[FElementarPanel[elDiagrams].Caption]);
 
   {Tables panel}
   FElementarPanel[elTables] := pnTree.AddPanel;
@@ -1525,7 +1876,8 @@ begin
     ImageIndex := IMAGEPANEL_TABLES;
     CaptionHint := ElementarPanelHint(Caption);
   end;
-  FElementarTree[elTables] := CreatePanelTreeView(FElementarPanel[elTables]);
+  FElementarTree[elTables] := CreatePanelTreeView(FElementarPanel[elTables],
+    AFilters.Values[FElementarPanel[elTables].Caption]);
 
   {Relationships panel}
   if FMetaData.DataDictionary.DatabaseType.EnableRelationships then
@@ -1537,7 +1889,8 @@ begin
       ImageIndex := IMAGEPANEL_RELATIONSHIPS;
       CaptionHint := ElementarPanelHint(Caption);
     end;
-    FElementarTree[elRelationships] := CreatePanelTreeView(FElementarPanel[elRelationships]);
+    FElementarTree[elRelationships] := CreatePanelTreeView(FElementarPanel[elRelationships],
+      AFilters.Values[FElementarPanel[elRelationships].Caption]);
   end;
 
   {Objects panel}
@@ -1551,7 +1904,7 @@ begin
         ImageIndex := GetObjectImageIndex(Categories[i]);
         CaptionHint := ElementarPanelHint(Caption);
       end;
-      ATree := CreatePanelTreeView(ANewPanel);
+      ATree := CreatePanelTreeView(ANewPanel, AFilters.Values[ANewPanel.Caption]);
       Categories[i].Data := ATree;
     end;
 
@@ -1579,6 +1932,9 @@ begin
   can receive tab stops)}
   pnTree.ActiveTabIndex := APanelIndex;
   pnTree.SplitterPosition := MaxInt;
+  finally
+    AFilters.Free;
+  end;
 end;
 
 procedure TfmProject.RemoveDeleteFromDiagram;
@@ -1649,7 +2005,8 @@ end;
 
 procedure TfmProject.RenameSelectedElement;
 begin
-  if (FocusedTreeView <> nil) and not (FocusedTreeView.IsEditing) and (FocusedTreeView.Selected <> nil) then
+  if (FocusedTreeView <> nil) and not (FocusedTreeView.IsEditing) and (FocusedTreeView.Selected <> nil) and
+    (FocusedTreeView.SelectionCount <= 1) then
   begin
     FAllowTreeEdit := true;
     FocusedTreeView.Selected.EditText;
@@ -1674,8 +2031,12 @@ var
   tv: TTreeView;
   tn, tnsel: TTreeNode;
   table: TGDAOTable;
+  AShowObj: TObject;
 begin
   tv := FElementarTree[elTables];
+
+  {An object passed explicitly is shown even if it does not match the filter}
+  AShowObj := ASelObj;
 
   {if no selection object is specified, then set the currently selected object
    as the object to be selected}
@@ -1690,7 +2051,7 @@ begin
     for i := 0 to FMetaData.DataDictionary.Tables.Count-1 do
     begin
       table := FMetaData.DataDictionary.Tables[i];
-      if table.Visible then
+      if table.Visible and ((table = AShowObj) or TreeFilterMatch(tv, table.TableName)) then
       begin
         tn := tv.Items.Add(nil, table.TableName);
         with tn do
@@ -1735,6 +2096,8 @@ begin
     tv.Items.Clear;
 
     for i := 0 to FMetaData.DiagramObj.Diagrams.Count-1 do
+    if (FMetaData.DiagramObj.Diagrams.Items[i] = ASelObj) or
+      TreeFilterMatch(tv, FMetaData.DiagramObj.Diagrams.Items[i].DiagramName) then
     begin
       tn := tv.Items.Add(nil, FMetaData.DiagramObj.Diagrams.Items[i].DiagramName);
       with tn do
@@ -1768,7 +2131,7 @@ begin
     for i := 0 to ACategory.Objects.Count - 1 do
     begin
       obj := ACategory.Objects[i];
-      if obj.Visible then
+      if obj.Visible and ((obj = ASelObj) or TreeFilterMatch(tv, obj.ObjectName)) then
       begin
         tn := tv.Items.Add(nil, obj.ObjectName);
         with tn do
@@ -1805,7 +2168,7 @@ begin
       for i := 0 to FMetaData.DataDictionary.Relationships.Count-1 do
       begin
         rel := FMetaData.DataDictionary.Relationships[i];
-        if rel.Visible then
+        if rel.Visible and ((rel = ASelObj) or TreeFilterMatch(tv, rel.RelationshipName)) then
         begin
           tn := tv.Items.Add(nil, rel.RelationshipName);
           with tn do
@@ -1948,18 +2311,12 @@ begin
 end;
 
 procedure TfmProject.PanelTreeKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-var
-  tv: TTreeView;
 begin
   case Key of
     VK_F2:
       RenameSelectedElement;
     VK_RETURN:
-      begin
-        tv := TTreeView(Sender);
-        if (tv.Selected <> nil) and (integer(tv.Selected.Data) > DATA_OBJECT) and not (TObject(tv.Selected.Data) is TGDAOCategory) then
-          SelectElement(TObject(tv.Selected.Data), true);
-      end;
+      OpenSelectedElements(TTreeView(Sender));
   end;
 end;
 
@@ -1969,10 +2326,13 @@ var
   N: TTreeNode;
 begin
   {Select item even when mouse right button is clicked. Just for better user interface.
-   We cannot rely on property RightClickSelect - it doesn't work very well}
+   We cannot rely on property RightClickSelect - it doesn't work very well.
+   Right click on an item that is already selected keeps the multi-selection, so
+   the popup menu acts on all selected items. Left click selection (Ctrl/Shift)
+   is handled by the tree view itself}
   N := TTreeView(Sender).GetNodeAt(X, Y);
-  if N <> nil then
-    N.Selected := true;
+  if (N <> nil) and (Button = mbRight) and not N.Selected then
+    TTreeView(Sender).Select(N, []);
 
   if (TTreeView(Sender).Selected <> nil) and (TObject((TTreeView(Sender).Selected.Data)) is TGDAOTable) then
     TTreeView(Sender).BeginDrag(false, 5);
@@ -2157,6 +2517,10 @@ begin
     (tv <> nil) and (tv = FElementarTree[elTables]) and
     (tv.Selected <> nil) and (integer(tv.Selected.Data) > DATA_OBJECT) and
 	  (TObject(tv.Selected.Data) is TGDAOTable) and Assigned(CurrentDiagramFrame);
+  if (tv <> nil) and (tv.SelectionCount > 1) then
+    acTable_AddDiagram.Caption := 'Add selected tables to diagram'
+  else
+    acTable_AddDiagram.Caption := 'Add selected table to diagram';
 end;
 
 procedure TfmProject.acTable_DuplicateExecute(Sender: TObject);
@@ -2180,7 +2544,7 @@ begin
 	TAction(Sender).Enabled :=
     (tv <> nil) and (tv = FElementarTree[elTables]) and
     (tv.Selected <> nil) and (integer(tv.Selected.Data) > DATA_OBJECT) and
-	  (TObject(tv.Selected.Data) is TGDAOTable);
+	  (TObject(tv.Selected.Data) is TGDAOTable) and (tv.SelectionCount <= 1);
 end;
 
 procedure TfmProject.acTable_FindInDiagramExecute(Sender: TObject);
@@ -2215,24 +2579,45 @@ begin
 	TAction(Sender).Enabled :=
     (tv <> nil) and (tv = FElementarTree[elTables]) and
     (tv.Selected <> nil) and (integer(tv.Selected.Data) > DATA_OBJECT) and
-	  (TObject(tv.Selected.Data) is TGDAOTable) and Assigned(CurrentDiagramFrame);
+	  (TObject(tv.Selected.Data) is TGDAOTable) and Assigned(CurrentDiagramFrame) and
+    (tv.SelectionCount <= 1);
 end;
 
 procedure TfmProject.acTable_AddDiagramExecute(Sender: TObject);
 var
   table: TGDAOTable;
   diagram: TDiagramClass;
-  tv: TTreeView;
+  AList: TList;
+  i: integer;
+  AlreadyIn: string;
 begin
-  tv := FElementarTree[elTables];
-  if tv.Selected <> nil then
-  begin
-    table := TGDAOTable(tv.Selected.Data);
-    diagram := CurrentDiagramFrame;
-    if diagram.FindTableBlock(table) = nil then
-      diagram.AddTableBlock(table)
-    else
-      ShowMessage('Table ' + table.TableName + ' already in diagram.');
+  diagram := CurrentDiagramFrame;
+  if diagram = nil then
+    Exit;
+  AList := TList.Create;
+  try
+    GetSelectedElements(FElementarTree[elTables], AList);
+    AlreadyIn := '';
+    for i := 0 to AList.Count - 1 do
+      if TObject(AList[i]) is TGDAOTable then
+      begin
+        table := TGDAOTable(AList[i]);
+        if diagram.FindTableBlock(table) = nil then
+          diagram.AddTableBlock(table)
+        else
+        begin
+          if AlreadyIn <> '' then
+            AlreadyIn := AlreadyIn + ', ';
+          AlreadyIn := AlreadyIn + table.TableName;
+        end;
+      end;
+    if AlreadyIn <> '' then
+      if AList.Count = 1 then
+        ShowMessage('Table ' + AlreadyIn + ' already in diagram.')
+      else
+        ShowMessage('Tables already in diagram: ' + AlreadyIn + '.');
+  finally
+    AList.Free;
   end;
 end;
 
