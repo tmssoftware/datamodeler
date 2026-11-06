@@ -43,9 +43,24 @@ type
 implementation
 
 uses
-  uConnectionsFile, fImportWizard, uSystemClass, uDBProperties, uAppUtils;
+  CommCtrl, uConnectionsFile, fImportWizard, uSystemClass, uDBProperties, uAppUtils;
 
 {$R *.dfm}
+
+// Bold through the native item state, so the node width is measured with the bold font
+procedure SetNodeBold(ANode: TTreeNode; ABold: Boolean);
+var
+  item: TTVItem;
+begin
+  item.mask := TVIF_HANDLE or TVIF_STATE;
+  item.hItem := ANode.ItemId;
+  item.stateMask := TVIS_BOLD;
+  if ABold then
+    item.state := TVIS_BOLD
+  else
+    item.state := 0;
+  TreeView_SetItem(ANode.Handle, item);
+end;
 
 procedure TfmUserConnections.FormCreate(Sender: TObject);
 begin
@@ -77,7 +92,12 @@ begin
               SelectedIndex := 1;
             end;
       end;
+      // database types with connections in bold
+      SetNodeBold(p, p.HasChildren);
     end;
+    // Database types and connections by name. Adding nodes does not sort them;
+    // after a rename the tree re-sorts by itself (SortType = stText)
+    tvTree.AlphaSort(True);
   finally
     tvTree.Items.EndUpdate;
   end;
@@ -99,11 +119,15 @@ begin
 end;
 
 procedure TfmUserConnections.acRemoveExecute(Sender: TObject);
+var
+  p: TTreeNode;
 begin
   if MessageDlg('Remove selected connection setting?', mtConfirmation, [mbYes, mbNo],0)=mrYes then
   begin
     SystemConfig.UserConnections.List.Delete( TConnectionSetting(tvTree.Selected.Data).Index );
+    p := tvTree.Selected.Parent;
     tvTree.Selected.Free;
+    SetNodeBold(p, p.HasChildren);
     //LoadConnectionsTree;
   end;
 end;
