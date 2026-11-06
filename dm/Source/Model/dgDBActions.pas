@@ -8,6 +8,7 @@ uses
 type
   TApplyRemoveRelationshipEvent = procedure(ARelationship: TGDAORelationship) of object;
   TApplyRemoveTableEvent = procedure(ATable: TGDAOTable) of object;
+  TApplyRemoveObjectEvent = procedure(AObject: TGDAOObject) of object;
 
   TatChangeTableConstraintAction = class(TatDBAction)
   private                                            
@@ -460,6 +461,10 @@ type
     procedure ExecuteDBAction(DBStructurer: TDBStructurer); override;
     property ExtraObject: TGDAOObject read FExtraObject write SetExtraObject;
     procedure ApplyDBAction(ADictionary: TGDAODatabase); override;
+  public
+    {Set by the UI while applying actions, so the object is removed through the
+    project (tab, tree node). When nil the object is just freed}
+    class var OnApplyRemove: TApplyRemoveObjectEvent;
   end;
 
   TatChangeExtraObjectAction = class(TatDBAction)
@@ -2318,7 +2323,18 @@ begin
   inherited;
   domain := ADictionary.Domains.FindByName(Self.Domain.Name);
   if domain <> nil then
-    domain.Assign(Self.Domain);
+  begin
+    // only what CompareDomains compares, in TGDAODomain.Assign order: not Assign, which
+    // would also copy the description (not read by every retriever) and InDatabase
+    domain.ConstraintExpr := Self.Domain.ConstraintExpr;
+    domain.DataTypeName := Self.Domain.DataTypeName;
+    domain.Size := Self.Domain.Size;
+    domain.Size2 := Self.Domain.Size2;
+    domain.DefaultValue := Self.Domain.DefaultValue;
+    domain.SeedValue := Self.Domain.SeedValue;
+    domain.IncrementValue := Self.Domain.IncrementValue;
+    domain.Required := Self.Domain.Required;
+  end;
 end;
 
 procedure TatRemoveDomainAction.ApplyDBAction(ADictionary: TGDAODatabase);
@@ -2378,7 +2394,10 @@ begin
   begin
     extraObject.CreateImplementation := Self.ExtraObject.CreateImplementation;
     extraObject.DropImplementation := Self.ExtraObject.DropImplementation;
-    extraObject.CustomProps := Self.ExtraObject.CustomProps;
+    // as in the comparison: most retrievers do not read the properties (e.g. sequence
+    // seed), an empty database side must not wipe those of the model
+    if Trim(Self.ExtraObject.CustomProps.Text) <> '' then
+      extraObject.CustomProps := Self.ExtraObject.CustomProps;
   end;
 end;
 
@@ -2388,7 +2407,11 @@ var
 begin
   inherited;
   extraObject := FindDictionaryObject(ADictionary, Self.ExtraObject);
-  if extraObject <> nil then
+  if extraObject = nil then
+    Exit;
+  if Assigned(OnApplyRemove) then
+    OnApplyRemove(extraObject)
+  else
     extraObject.Free;
 end;
 

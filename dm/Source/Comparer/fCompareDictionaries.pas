@@ -14,7 +14,7 @@ type
   TActionTableProp = (atpNone, atpField, atpIndex, atpConstraint, atpRelationship, atpTrigger);
 
   {cmResync: model (base) compared with a live database (target); changes can be
-   applied to the model. cmProjects: merge, script only (see ADR-0001)}
+   applied to the model. cmProjects: merge, script only}
   TCompareMode = (cmProjects, cmVersions, cmResync);
 
   TDictionaryTreeNodeType =
@@ -352,7 +352,7 @@ begin
     else
     begin
       for i := 0 to listApply.Count - 1 do
-        // ADR-0001: merge (cmProjects) only ever adds tables to the project
+        // merge (cmProjects) only ever adds tables to the project
         if (FMode <> cmProjects) or (listApply.Items[i] is TatCreateTableAction) then
           TatDBAction(listApply.Items[i]).ApplyDBAction(FCurrentMetaData.DataDictionary);
       FApplied := true;

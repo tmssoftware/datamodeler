@@ -183,6 +183,7 @@ type
     function GetSelectedElement: TObject;
     procedure DeleteRelationship(ARel: TGDAORelationship);
     procedure DeleteTable(ATable: TGDAOTable);
+    procedure DeleteExtraObject(AObject: TGDAOObject);
     procedure CloseExplorerPage(idx: integer; ADestroyPage: boolean = true);
     procedure CheckReportListCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
     procedure GotoReportItemObject(AItem: TCheckReportItem);
@@ -1184,6 +1185,15 @@ begin
   inherited;
   if Visible then
     Realign;
+end;
+
+procedure TfmProject.DeleteExtraObject(AObject: TGDAOObject);
+begin
+  // as DeleteSelectedElement: close the object tab before freeing the object
+  CloseElement(AObject);
+  RemoveNodeReference(AObject);
+  AObject.Free;
+  SetModified(nil);
 end;
 
 procedure TfmProject.DeleteTable(ATable: TGDAOTable);
@@ -2271,6 +2281,7 @@ begin
     // removals go through the project so tabs, tree nodes and diagram objects are removed too
     TatRemoveTableAction.OnApplyRemove := DeleteTable;
     TatRemoveRelationshipAction.OnApplyRemove := DeleteRelationship;
+    TatRemoveExtraObjectAction.OnApplyRemove := DeleteExtraObject;
     try
       with TfrmCompareProjects.Create(nil) do
       try
@@ -2281,6 +2292,7 @@ begin
     finally
       TatRemoveTableAction.OnApplyRemove := nil;
       TatRemoveRelationshipAction.OnApplyRemove := nil;
+      TatRemoveExtraObjectAction.OnApplyRemove := nil;
     end;
   finally
     // actions referencing the database dictionary were freed with the compare form
