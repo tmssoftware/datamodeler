@@ -184,6 +184,8 @@ type
     procedure DeleteRelationship(ARel: TGDAORelationship);
     procedure DeleteTable(ATable: TGDAOTable);
     procedure DeleteExtraObject(AObject: TGDAOObject);
+    {Resync: BeginExternalChanges (ABegin) or EndExternalChanges on every open table tab}
+    procedure SetTableTabsExternalChanges(ABegin: boolean);
     procedure CloseExplorerPage(idx: integer; ADestroyPage: boolean = true);
     procedure CheckReportListCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
     procedure GotoReportItemObject(AItem: TCheckReportItem);
@@ -2282,6 +2284,8 @@ begin
     TatRemoveTableAction.OnApplyRemove := DeleteTable;
     TatRemoveRelationshipAction.OnApplyRemove := DeleteRelationship;
     TatRemoveExtraObjectAction.OnApplyRemove := DeleteExtraObject;
+    // open table tabs list fields, indexes, ... that applying may free
+    SetTableTabsExternalChanges(true);
     try
       with TfrmCompareProjects.Create(nil) do
       try
@@ -2290,6 +2294,8 @@ begin
         Free;
       end;
     finally
+      // reloads the table tabs
+      SetTableTabsExternalChanges(false);
       TatRemoveTableAction.OnApplyRemove := nil;
       TatRemoveRelationshipAction.OnApplyRemove := nil;
       TatRemoveExtraObjectAction.OnApplyRemove := nil;
@@ -2303,10 +2309,24 @@ begin
   begin
     ReloadTreeView;
     RefreshOpenedDiagrams;
-    for i := 0 to FMetaData.DataDictionary.Tables.Count - 1 do
-      RefreshTableTab(FMetaData.DataDictionary.Tables[i]);
+    // relationship tabs: the key grid references the field links, which may have been recreated
+    for i := 0 to FExplorer.Count - 1 do
+      if FExplorer.Items[i].FrameCtrl is TfmRelationshipEditor then
+        TfmRelationshipEditor(FExplorer.Items[i].FrameCtrl).RefreshFullFrameInformation;
     SetModified(nil);
   end;
+end;
+
+procedure TfmProject.SetTableTabsExternalChanges(ABegin: boolean);
+var
+  i: integer;
+begin
+  for i := 0 to FExplorer.Count - 1 do
+    if FExplorer.Items[i].FrameCtrl is TfmTableElements then
+      if ABegin then
+        TfmTableElements(FExplorer.Items[i].FrameCtrl).BeginExternalChanges
+      else
+        TfmTableElements(FExplorer.Items[i].FrameCtrl).EndExternalChanges;
 end;
 
 procedure TfmProject.acTable_FindInDiagramExecute(Sender: TObject);
