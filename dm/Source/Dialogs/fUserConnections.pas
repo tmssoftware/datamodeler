@@ -38,7 +38,6 @@ type
     procedure Button4Click(Sender: TObject);
   private
     procedure LoadConnectionsTree;
-    procedure SortConnections(ADBTypeNode: TTreeNode);
   end;
 
 implementation
@@ -47,11 +46,6 @@ uses
   CommCtrl, uConnectionsFile, fImportWizard, uSystemClass, uDBProperties, uAppUtils;
 
 {$R *.dfm}
-
-function CompareConnectionNodes(lParam1, lParam2, lParamSort: LPARAM): Integer; stdcall;
-begin
-  Result := CompareText(TConnectionSetting(lParam1).Name, TConnectionSetting(lParam2).Name);
-end;
 
 // Bold through the native item state, so the node width is measured with the bold font
 procedure SetNodeBold(ANode: TTreeNode; ABold: Boolean);
@@ -98,18 +92,15 @@ begin
               SelectedIndex := 1;
             end;
       end;
-      SortConnections(p);
+      // database types with connections in bold
+      SetNodeBold(p, p.HasChildren);
     end;
+    // Database types and connections by name. Adding nodes does not sort them;
+    // after a rename the tree re-sorts by itself (SortType = stText)
+    tvTree.AlphaSort(True);
   finally
     tvTree.Items.EndUpdate;
   end;
-end;
-
-// Connections sorted by name; database types with connections in bold
-procedure TfmUserConnections.SortConnections(ADBTypeNode: TTreeNode);
-begin
-  ADBTypeNode.CustomSort(@CompareConnectionNodes, 0, False);
-  SetNodeBold(ADBTypeNode, ADBTypeNode.HasChildren);
 end;
 
 procedure TfmUserConnections.acRemoveUpdate(Sender: TObject);
@@ -164,12 +155,6 @@ begin
   if s > '' then
   begin
     TConnectionSetting(Node.Data).Name := s;
-    // Re-sort once the edit has ended and the node shows the new name
-    TThread.ForceQueue(nil,
-      procedure
-      begin
-        SortConnections(Node.Parent);
-      end);
   end;
 end;
 
