@@ -411,7 +411,8 @@ procedure TPostgreSQLDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase)
         '    i.relname as index_name,           ' +
         '    array_to_string(ix.indkey, '','') as index_order,  ' +
         '    a.attname as column_name,          ' +
-        '    a.attnum as column_index           ' +
+        '    a.attnum as column_index,          ' +
+        '    case when ix.indisunique then 1 else 0 end as is_unique ' +
         'from                                   ' +
         '    pg_class t,                        ' +
         '    pg_class i,                        ' +
@@ -425,7 +426,6 @@ procedure TPostgreSQLDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase)
         '    and t.relnamespace = n.oid         ' +
         '    and a.attnum = ANY(ix.indkey)      ' +
         '    and t.relkind = ''r''                ' +
-        '    and ix.indisunique <> ''t''          ' +
         '    and ix.indisprimary <> ''t''         ' +
         '    and %s                             '  +
         'order by                               ' +
@@ -446,6 +446,9 @@ procedure TPostgreSQLDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase)
           if (index = nil) or not SameText(index.IndexName, Module.FieldAsString('INDEX_NAME')) then
           begin
             index := table.Indexes.Add(Module.FieldAsString('INDEX_NAME'));
+            // unique indexes and unique constraints (backed by a unique index)
+            if Module.FieldAsInteger('IS_UNIQUE') = 1 then
+              index.IndexType := itUnique;
             Pos.Clear;
             Keys := SplitString(Module.FieldAsString('INDEX_ORDER'), ',');
             for I := 0 to Length(Keys) - 1 do

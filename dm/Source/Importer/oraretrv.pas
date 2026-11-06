@@ -133,8 +133,9 @@ procedure TOracleDataRetriever.GetDataDictionary(ADictionary: TGDAODatabase);
         field := table.Fields.Add(Module.FieldAsString('COLUMN_NAME'), nil, 0, 0,
           Module.FieldAsString('NULLABLE') = 'N' {nullable? Y/N});
 
-        {default value}
-        field.DefaultValue := Module.FieldAsString('DATA_DEFAULT');
+        {default value: Oracle keeps the trailing blanks/line breaks of the DDL text}
+        field.DefaultValue := Trim(Module.FieldAsString('DATA_DEFAULT'));
+        field.Description := Module.FieldAsString('COMMENTS');
 
         with GetFieldDefinition(
           Module.FieldAsString('DATA_TYPE'),
