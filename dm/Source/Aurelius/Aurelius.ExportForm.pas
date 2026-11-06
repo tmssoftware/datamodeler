@@ -21,9 +21,28 @@ type
     PageControl1: TPageControl;
     tsMappings: TTabSheet;
     grTables: TAdvColumnGrid;
+    cbTablesFilter: TComboBox;
+    edTablesFilter: TEdit;
+    pnMappingsLeft: TPanel;
+    splMappings: TSplitter;
+    pnMappingsRight: TPanel;
+    pnFieldsLeft: TPanel;
+    splFields: TSplitter;
+    pnFieldsRight: TPanel;
+    pnAssociationsLeft: TPanel;
+    splAssociations: TSplitter;
+    pnAssociationsRight: TPanel;
+    pnManyValuedLeft: TPanel;
+    splManyValued: TSplitter;
+    pnManyValuedRight: TPanel;
     PageControl2: TPageControl;
     tsFields: TTabSheet;
     grFields: TAdvColumnGrid;
+    cbFieldsFilter: TComboBox;
+    edFieldsFilter: TEdit;
+    pmFields: TPopupMenu;
+    mnFieldsSelectAll: TMenuItem;
+    mnFieldsUnselectAll: TMenuItem;
     tsAssociations: TTabSheet;
     grAssociations: TAdvColumnGrid;
     edTableName: TAdvEdit;
@@ -123,6 +142,10 @@ type
     cbDefaultGuidIdGenerator: TAdvComboBox;
     cbDefaultStringIdGenerator: TAdvComboBox;
     procedure grTablesClick(Sender: TObject);
+    procedure TablesFilterChange(Sender: TObject);
+    procedure FieldsFilterChange(Sender: TObject);
+    procedure mnFieldsSelectAllClick(Sender: TObject);
+    procedure mnFieldsUnselectAllClick(Sender: TObject);
     procedure grFieldsClick(Sender: TObject);
     procedure grAssociationsClick(Sender: TObject);
     procedure SaveMappingsProperty(Sender: TObject);
@@ -181,6 +204,10 @@ type
     procedure EmptyGrid(AGrid: TAdvStringGrid);
     procedure EnableGrid(AGrid: TAdvStringGrid; AEnable: boolean);
     procedure LoadTablesGrid;
+    function MatchesFilter(ACombo: TComboBox; AEdit: TEdit; const AName: string; AIncluded: Boolean): Boolean;
+    procedure ClearTablesFilter;
+    procedure SetVisibleTablesIncluded(AIncluded: Boolean);
+    procedure SetVisibleFieldsIncluded(AIncluded: Boolean);
     procedure LoadSequencesCombo;
     procedure LoadFieldsGrid(ATable: TGDAOTable);
     procedure LoadAssociationsGrid(ATable: TGDAOTable);
@@ -218,7 +245,13 @@ uses
   dgConsts,
   uDiagramClass, uTableDiagramBlock,
   Aurelius.SourceGenerator.Options.Xml,
-  uGDAODiagrams, fIDEEditor, dIDEActions;
+  uGDAODiagrams, fIDEEditor, dIDEActions, StrUtils;
+
+const
+  // Item order of the cbTablesFilter / cbFieldsFilter combo boxes
+  FilterAll = 0;
+  FilterIncluded = 1;
+  FilterExcluded = 2;
 
 {$R *.dfm}
 
@@ -493,15 +526,11 @@ begin
   begin
     if Diagram.Blocks[c] is TTableDiagramBlock then
     begin
+      // Update the mapping even when the table is hidden by the filter
+      FGenerator.TableMapping(TTableDiagramBlock(Diagram.Blocks[c]).Table).Excluded := not Select;
       RowIdx := FindRowFromObject(grTables, TTableDiagramBlock(Diagram.Blocks[c]).Table);
       if RowIdx >= 0 then
-      begin
-        if grTables.IsChecked(0, RowIdx) <> Select then
-        begin
-          grTables.SetCheckBoxState(0, RowIdx, Select);
-          grTablesCheckBoxChange(grTables, 0, RowIdx, Select);
-        end;
-      end;
+        grTables.SetCheckBoxState(0, RowIdx, Select);
     end;
   end;
 end;
@@ -612,6 +641,9 @@ procedure TfmAureliusExport.GoToSequenceControl(ATable: TGDAOTable);
 var
   I: integer;
 begin
+  // The table in error may be hidden by the filter
+  if FindRowFromObject(grTables, ATable) < 0 then
+    ClearTablesFilter;
   for I := 0 to grTables.RowCount - 1 do
     if ATable = ObjectFromGrid<TGDAOTable>(grTables, I) then
     begin
@@ -970,6 +1002,33 @@ begin
     FGenerator.FieldMapping(field).Excluded := not State;
 end;
 
+procedure TfmAureliusExport.SetVisibleFieldsIncluded(AIncluded: Boolean);
+var
+  row: Integer;
+  field: TGDAOField;
+begin
+  // Applies to the rows shown by the filter; required fields have no checkbox and stay included
+  for row := 0 to grFields.RowCount - 1 do
+  begin
+    field := ObjectFromGrid<TGDAOField>(grFields, row);
+    if (field <> nil) and not field.Required then
+    begin
+      FGenerator.FieldMapping(field).Excluded := not AIncluded;
+      grFields.SetCheckBoxState(0, row, AIncluded);
+    end;
+  end;
+end;
+
+procedure TfmAureliusExport.mnFieldsSelectAllClick(Sender: TObject);
+begin
+  SetVisibleFieldsIncluded(True);
+end;
+
+procedure TfmAureliusExport.mnFieldsUnselectAllClick(Sender: TObject);
+begin
+  SetVisibleFieldsIncluded(False);
+end;
+
 procedure TfmAureliusExport.grFieldsClick(Sender: TObject);
 begin
   LoadMappingsProperty(edFieldName);
@@ -1105,7 +1164,21 @@ begin
   FOptions.Tables.TryGetValue(ATable.TID, tableMapping);
   fields := FGenerator.GetPropertyFields(ATable);
   try
-    grFields.RowCount := fields.Count;
+    // Only the fields matching the filter get a row; required fields are always included
+    for c := fields.Count - 1 downto 0 do
+    begin
+      field := fields[c];
+      mapping := nil;
+      if tableMapping <> nil then
+        tableMapping.Fields.TryGetValue(field.FID, mapping);
+      if not MatchesFilter(cbFieldsFilter, edFieldsFilter, field.FieldName,
+        field.Required or (mapping = nil) or not mapping.Excluded) then
+        fields.Delete(c);
+    end;
+
+    grFields.Objects[0, 0] := nil; // the single empty row left when nothing matches
+    if fields.Count > 0 then
+      grFields.RowCount := fields.Count;
     for c := 0 to fields.Count - 1 do
     begin
       field := fields[c];
@@ -1177,29 +1250,100 @@ var
   c: Integer;
   row: integer;
   selected: TGDAOTable;
+  visible: TList<TGDAOTable>;
 begin
   selected := SelectedTable;
   EmptyGrid(grTables);
-  grTables.RowCount := FApp.DataDictionary.Tables.Count;
-  grTables.AddCheckBoxColumn(0);
-  for c := 0 to FApp.DataDictionary.Tables.Count - 1 do
-  begin
-    table := FApp.DataDictionary.Tables[c];
-    FOptions.Tables.TryGetValue(table.TID, mapping);
-    row := c;
+  grTables.Objects[0, 0] := nil; // the single empty row left when nothing matches
+  // Only the tables matching the filter get a row; the selection state lives in the mappings
+  visible := TList<TGDAOTable>.Create;
+  try
+    for c := 0 to FApp.DataDictionary.Tables.Count - 1 do
+    begin
+      table := FApp.DataDictionary.Tables[c];
+      mapping := FGenerator.TableMapping(table);
+      if MatchesFilter(cbTablesFilter, edTablesFilter, table.TableName, not mapping.Excluded) then
+        visible.Add(table);
+    end;
 
-    // field object
-    grTables.Objects[0, row] := table;
-    // field properties
-    grTables.SetCheckBoxState(0, row, (mapping = nil) or not mapping.Excluded);
-    grTables.Cells[1, row] := table.TableName;
-    if selected = table then
-      grTables.Row := c;
+    if visible.Count > 0 then
+      grTables.RowCount := visible.Count;
+    grTables.AddCheckBoxColumn(0);
+    for row := 0 to visible.Count - 1 do
+    begin
+      table := visible[row];
+      // field object
+      grTables.Objects[0, row] := table;
+      // field properties
+      grTables.SetCheckBoxState(0, row, not FGenerator.TableMapping(table).Excluded);
+      grTables.Cells[1, row] := table.TableName;
+    end;
+    grTables.Options := grTables.Options + [goRowSelect];
+    grTables.Sort(0);
+    // Keep the selected table if it is still visible (after the sort)
+    row := FindRowFromObject(grTables, selected);
+    if row >= 0 then
+      grTables.Row := row;
+    EnableGrid(grTables, visible.Count > 0);
+  finally
+    visible.Free;
   end;
-  grTables.Options := grTables.Options + [goRowSelect];
-  grTables.Sort(0);
-  EnableGrid(grTables, FApp.DataDictionary.Tables.Count > 0);
   grTablesClick(nil);
+end;
+
+function TfmAureliusExport.MatchesFilter(ACombo: TComboBox; AEdit: TEdit; const AName: string;
+  AIncluded: Boolean): Boolean;
+begin
+  case ACombo.ItemIndex of
+    FilterIncluded: Result := AIncluded;
+    FilterExcluded: Result := not AIncluded;
+  else
+    Result := True;
+  end;
+  if Result and (Trim(AEdit.Text) <> '') then
+    Result := ContainsText(AName, Trim(AEdit.Text));
+end;
+
+procedure TfmAureliusExport.TablesFilterChange(Sender: TObject);
+begin
+  LoadTablesGrid;
+end;
+
+procedure TfmAureliusExport.FieldsFilterChange(Sender: TObject);
+begin
+  LoadFieldsGrid(SelectedTable);
+end;
+
+procedure TfmAureliusExport.ClearTablesFilter;
+begin
+  if (cbTablesFilter.ItemIndex = FilterAll) and (edTablesFilter.Text = '') then Exit;
+  cbTablesFilter.OnChange := nil;
+  edTablesFilter.OnChange := nil;
+  try
+    cbTablesFilter.ItemIndex := FilterAll;
+    edTablesFilter.Text := '';
+  finally
+    cbTablesFilter.OnChange := TablesFilterChange;
+    edTablesFilter.OnChange := TablesFilterChange;
+  end;
+  LoadTablesGrid;
+end;
+
+procedure TfmAureliusExport.SetVisibleTablesIncluded(AIncluded: Boolean);
+var
+  row: Integer;
+  table: TGDAOTable;
+begin
+  // Applies to the rows shown by the filter, and to their mappings (what the export reads)
+  for row := 0 to grTables.RowCount - 1 do
+  begin
+    table := ObjectFromGrid<TGDAOTable>(grTables, row);
+    if table <> nil then
+    begin
+      FGenerator.TableMapping(table).Excluded := not AIncluded;
+      grTables.SetCheckBoxState(0, row, AIncluded);
+    end;
+  end;
 end;
 
 procedure TfmAureliusExport.MemoActionUpdate(Sender: TObject);
@@ -1209,12 +1353,12 @@ end;
 
 procedure TfmAureliusExport.mnSelectAllClick(Sender: TObject);
 begin
-  grTables.CheckAll(0);
+  SetVisibleTablesIncluded(True);
 end;
 
 procedure TfmAureliusExport.mnUnselectAllClick(Sender: TObject);
 begin
-  grTables.UnCheckAll(0);
+  SetVisibleTablesIncluded(False);
 end;
 
 procedure TfmAureliusExport.mnUpdateFromDiagramDefaultClick(Sender: TObject);
@@ -1247,9 +1391,10 @@ procedure TfmAureliusExport.ProcessSelectedTables(AProc: TProc<TGDAOTable>);
 var
   I: Integer;
 begin
-  for I := 0 to grTables.RowCount - 1 do
-    if not FGenerator.TableMapping(ObjectFromGrid<TGDAOTable>(grTables, I)).Excluded then
-      AProc(ObjectFromGrid<TGDAOTable>(grTables, I));
+  // All selected tables of the model, not only the rows shown by the filter
+  for I := 0 to FApp.DataDictionary.Tables.Count - 1 do
+    if not FGenerator.TableMapping(FApp.DataDictionary.Tables[I]).Excluded then
+      AProc(FApp.DataDictionary.Tables[I]);
 end;
 
 procedure TfmAureliusExport.SetMetadata(const Value: TAppMetaData);
