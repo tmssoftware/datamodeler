@@ -9,13 +9,13 @@ products:
       pinned: false
 
   - tms.biz.aurelius:
-      version: 5.26
+      version: 5.31
       server: tms
       url: 
       pinned: false
 
   - tms.biz.bcl:
-      version: 2.1
+      version: 2.6
       server: tms
       url: 
       pinned: false
